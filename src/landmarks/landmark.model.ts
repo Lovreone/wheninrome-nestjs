@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { LandmarkType } from './../helpers/enums';
 
-// Blueprint object for Mongoose (uses JS types), id will be autogenereated
+// Blueprint object for Mongoose (uses JS types), id autogenereated
 export const LandmarkSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: false },

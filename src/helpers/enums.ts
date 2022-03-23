@@ -8,5 +8,5 @@ export enum LandmarkType {
     Obelisk = 'Obelisk',
     Monument = 'Monument',
     Square = 'Square',
-    // ...
+    // TODO: This should be created/managed by admin instead of hardcoding
 }
