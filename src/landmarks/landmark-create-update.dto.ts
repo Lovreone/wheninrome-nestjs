@@ -1,11 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength, IsNumber, IsPositive } from 'class-validator';
+import { IsOptional, IsString, MaxLength, IsNumber, IsPositive, MinLength, IsNotEmpty, Min } from 'class-validator';
 
 export class LandmarkCreateUpdateDTO {
     @ApiProperty()
+    @IsNotEmpty()
     @IsString()
+    @MinLength(3)
     @MaxLength(20)
     name: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(3)
+    slug: string;
 
     @ApiPropertyOptional()
     @IsOptional()
@@ -13,10 +21,12 @@ export class LandmarkCreateUpdateDTO {
     description: string;
 
     @ApiProperty()
+    @IsNotEmpty()
     @IsNumber()
-    @IsPositive()
+    @Min(0)
     entranceFee: number;
 }
+// TODO: Make sure all constraints reflect the create/edit form in FE
 
 /* TODO: Remove when finished 
 Docs https://github.com/typestack/class-validator

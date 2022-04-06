@@ -29,10 +29,23 @@ export class LandmarksController {
         type: LandmarkDTO,
         description: 'Returned the single Landmarks by ID'
     })
-    async getLandmark(
+    async getLandmarkById(
         @Param('id') landmarkId: string
     ): Promise<LandmarkDTO> {
-        const landmark = await this.landmarkService.getSingle(landmarkId);
+        const landmark = await this.landmarkService.getSingleById(landmarkId);
+        return LandmarkConverter.convertToDto(landmark);
+    }
+
+    @Get('by-slug/:slug')
+    @ApiResponse({
+        status: 200,
+        type: LandmarkDTO,
+        description: 'Returned the single Landmarks by slug'
+    })
+    async getLandmarkBySlug(
+        @Param('slug') landmarkSlug: string
+    ): Promise<LandmarkDTO> {
+        const landmark = await this.landmarkService.getSingleBySlug(landmarkSlug);
         return LandmarkConverter.convertToDto(landmark);
     }
 
@@ -49,7 +62,8 @@ export class LandmarksController {
     async addLandmark(
         @Body() body: LandmarkCreateUpdateDTO
     ): Promise<LandmarkDTO> {
-        const newLandmark = await this.landmarkService.insert(body);
+        const validatedBody = await this.landmarkService.validateBodyData(body);
+        const newLandmark = await this.landmarkService.insert(validatedBody);
         return LandmarkConverter.convertToDto(newLandmark);
     }
 
@@ -66,7 +80,8 @@ export class LandmarksController {
         @Param('id') landmarkId: string,
         @Body() body: LandmarkCreateUpdateDTO
     ): Promise<LandmarkDTO> {
-        const updatedLandmark = await this.landmarkService.update(landmarkId, body);
+        const validatedBody = await this.landmarkService.validateBodyData(body);
+        const updatedLandmark = await this.landmarkService.update(landmarkId, validatedBody);
         return LandmarkConverter.convertToDto(updatedLandmark);
     }
 

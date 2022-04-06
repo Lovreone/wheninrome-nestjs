@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Landmark } from './landmark.model';
 import { LandmarkCreateUpdateDTO } from './landmark-create-update.dto';
-import { sendNotFound } from 'src/helpers/helpers';
+import { sendForbidden, sendNotFound } from 'src/helpers/helpers';
 
 @Injectable()
 export class LandmarksService {
@@ -15,16 +15,21 @@ export class LandmarksService {
         return await this.landmarkModel.find().exec();
     }
 
-    async getSingle(landmarkId: string): Promise<Landmark> {
+    async getSingleById(landmarkId: string): Promise<Landmark> {
         try {
             return await this.landmarkModel.findById(landmarkId).orFail();
         } catch (error) {
             sendNotFound('Landmark not found.');
         }  
     }
+
+    async getSingleBySlug(landmarkSlug: string): Promise<Landmark> {
+        return this.landmarkModel.findOne({ slug: landmarkSlug })
+            .orFail(() => {throw new NotFoundException('Landmark not found.')});        
+    }
  
     async insert(data: LandmarkCreateUpdateDTO): Promise<Landmark> {
-        const newLandmark = new this.landmarkModel(data);       
+        const newLandmark = new this.landmarkModel(data);
         return await newLandmark.save();
     }
 
@@ -44,6 +49,24 @@ export class LandmarksService {
             await this.landmarkModel.deleteOne({ _id: landmarkId }).orFail().exec();
         } catch (error) {
             sendNotFound('Landmark not found.');
+        }
+    }
+
+    /** To be used prior to saving slug to database: 
+     * 1. Transforms submitted slug string into the required form
+     * 2. Checks if a Landmark with that slug already exists */
+    async validateBodyData(data: LandmarkCreateUpdateDTO): Promise<LandmarkCreateUpdateDTO> {
+        const validatedData = data;
+        validatedData.slug = data.slug
+            .trim()
+            .replace(/[^a-zA-Z0-9 -]/g, '')
+            .replaceAll(' ', '-');
+        
+        const landmarkFound = await this.landmarkModel.findOne({ slug: validatedData.slug });
+        if (landmarkFound) {
+            sendForbidden(`Landmark slug '${data.slug}' already in use on Landmark '${landmarkFound.name}'.`);
+        } else {
+            return validatedData;
         }
     }
 }

@@ -6,6 +6,7 @@ export class LandmarkConverter {
         return new LandmarkDTO(
             model.id,
             model.name,
+            model.slug,
             model.description,
             model.entranceFee
         );
