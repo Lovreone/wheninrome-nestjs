@@ -12,6 +12,10 @@ export class LandmarkConverter {
         );
     }
 
+    public static convertToDtoArray(modelsArr: Array<Landmark>): Array<LandmarkDTO> {
+        return modelsArr.map(model => this.convertToDto(model)) || [];
+    }
+
     /* FIXME: Remove when finisehd if unnecessary
      public static convertToModel(dto: LandmarkDTO): Landmark {
         return new Landmark(

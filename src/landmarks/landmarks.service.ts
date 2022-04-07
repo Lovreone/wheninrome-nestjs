@@ -24,8 +24,8 @@ export class LandmarksService {
     }
 
     async getSingleBySlug(landmarkSlug: string): Promise<Landmark> {
-        return this.landmarkModel.findOne({ slug: landmarkSlug })
-            .orFail(() => {throw new NotFoundException('Landmark not found.')});        
+        return await this.landmarkModel.findOne({ slug: landmarkSlug })
+            .orFail(() => {throw new NotFoundException('Landmark not found.')});
     }
  
     async insert(data: LandmarkCreateUpdateDTO): Promise<Landmark> {

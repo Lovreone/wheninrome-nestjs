@@ -9,17 +9,17 @@ import { LandmarkConverter } from './landmark.converter';
 @Controller('landmarks')
 export class LandmarksController {
     constructor(
-        private readonly landmarkService: LandmarksService
+        private readonly landmarksService: LandmarksService
     ) {}
 
     @Get()
     @ApiResponse({
         status: 200,
         type: [LandmarkDTO],
-        description: 'Returns the full list of Landmarks'
+        description: 'Returns the full list of Landmark documents'
     })
     async getLandmarks(): Promise<LandmarkDTO[]> {
-        const landmarks = await this.landmarkService.getAll();
+        const landmarks = await this.landmarksService.getAll();
         return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
     }
 
@@ -27,12 +27,12 @@ export class LandmarksController {
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
-        description: 'Returned the single Landmarks by ID'
+        description: 'Returned a single Landmark document document by ID'
     })
     async getLandmarkById(
         @Param('id') landmarkId: string
     ): Promise<LandmarkDTO> {
-        const landmark = await this.landmarkService.getSingleById(landmarkId);
+        const landmark = await this.landmarksService.getSingleById(landmarkId);
         return LandmarkConverter.convertToDto(landmark);
     }
 
@@ -40,12 +40,12 @@ export class LandmarksController {
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
-        description: 'Returned the single Landmarks by slug'
+        description: 'Returned a single Landmark document by slug'
     })
     async getLandmarkBySlug(
         @Param('slug') landmarkSlug: string
     ): Promise<LandmarkDTO> {
-        const landmark = await this.landmarkService.getSingleBySlug(landmarkSlug);
+        const landmark = await this.landmarksService.getSingleBySlug(landmarkSlug);
         return LandmarkConverter.convertToDto(landmark);
     }
 
@@ -54,16 +54,16 @@ export class LandmarksController {
     @ApiResponse({
         status: 201,
         type: LandmarkDTO,
-        description: 'Returned the created Landmark object'
+        description: 'Returned the created Landmark document'
     })
     @ApiBody({
         type: LandmarkCreateUpdateDTO
     })
-    async addLandmark(
+    async createLandmark(
         @Body() body: LandmarkCreateUpdateDTO
     ): Promise<LandmarkDTO> {
-        const validatedBody = await this.landmarkService.validateBodyData(body);
-        const newLandmark = await this.landmarkService.insert(validatedBody);
+        const validatedBody = await this.landmarksService.validateBodyData(body);
+        const newLandmark = await this.landmarksService.insert(validatedBody);
         return LandmarkConverter.convertToDto(newLandmark);
     }
 
@@ -71,7 +71,7 @@ export class LandmarksController {
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
-        description: 'Returned the updated Landmark object'
+        description: 'Returned the updated Landmark document'
     })
     @ApiBody({
         type: LandmarkCreateUpdateDTO
@@ -80,8 +80,8 @@ export class LandmarksController {
         @Param('id') landmarkId: string,
         @Body() body: LandmarkCreateUpdateDTO
     ): Promise<LandmarkDTO> {
-        const validatedBody = await this.landmarkService.validateBodyData(body);
-        const updatedLandmark = await this.landmarkService.update(landmarkId, validatedBody);
+        const validatedBody = await this.landmarksService.validateBodyData(body);
+        const updatedLandmark = await this.landmarksService.update(landmarkId, validatedBody);
         return LandmarkConverter.convertToDto(updatedLandmark);
     }
 
@@ -89,11 +89,11 @@ export class LandmarksController {
     @HttpCode(204)
     @ApiResponse({
         status: 204,
-        description: 'Deleted Landmark object by ID'
+        description: 'Deleted Landmark document by ID'
     })
     async delete(
         @Param('id') landmarkId: string
     ): Promise<void> {
-        await this.landmarkService.delete(landmarkId);
+        await this.landmarksService.delete(landmarkId);
     }
 }
