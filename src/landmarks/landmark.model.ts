@@ -1,12 +1,12 @@
 import * as mongoose from 'mongoose';
-import { LandmarkType } from './../helpers/enums';
 
-// Blueprint object for Mongoose (uses JS types), id autogenereated
+// Blueprint objects for Mongoose (uses JS types), id autogenereated
 export const LandmarkSchema = new mongoose.Schema({
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: false },
     entranceFee: { type: Number, required: true },
+    city: { id: String, name: String, required: false }
 });
 
 // Entity Model (Database)
@@ -16,4 +16,10 @@ export class Landmark extends mongoose.Document {
     slug: string;
     description: string;
     entranceFee: number;
+    city: NestedCity;
+}
+
+export interface NestedCity {
+    id: string;
+    name: string;
 }

@@ -1,5 +1,6 @@
+import { LandmarkCityDTO } from './landmark-city.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength, IsNumber, IsPositive, MinLength, IsNotEmpty, Min } from 'class-validator';
+import { IsOptional, IsString, MaxLength, IsNumber, MinLength, IsNotEmpty, Min } from 'class-validator';
 
 export class LandmarkCreateUpdateDTO {
     @ApiProperty()
@@ -25,6 +26,10 @@ export class LandmarkCreateUpdateDTO {
     @IsNumber()
     @Min(0)
     entranceFee: number;
+
+    @ApiPropertyOptional({ type: LandmarkCityDTO })
+    @IsOptional()
+    city: LandmarkCityDTO;
 }
 // TODO: Make sure all constraints reflect the create/edit form in FE
 

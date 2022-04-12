@@ -8,7 +8,8 @@ export class LandmarkConverter {
             model.name,
             model.slug,
             model.description,
-            model.entranceFee
+            model.entranceFee,
+            model.city
         );
     }
 
