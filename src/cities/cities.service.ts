@@ -50,7 +50,8 @@ export class CitiesService {
 
     /** To be used prior to saving slug to database: 
      * 1. Transforms submitted slug string into the required form
-     * 2. Checks if a Landmark with that slug already exists */
+     * 2. Checks if a City with that slug already exists
+     * 3. If found, make sure is is not the City we're currently editing */
     async validateBodyData(data: CityCreateUpdateDTO): Promise<CityCreateUpdateDTO> {
         const validatedData = data;
 
@@ -60,12 +61,11 @@ export class CitiesService {
             .replaceAll(' ', '-');
         const cityFound = await this.cityModel.findOne({ slug: validatedData.slug });
 
-        const isUpdateOperation = data.hasOwnProperty('id');
-        if (isUpdateOperation && data['id'] === cityFound['id']) {
-            return validatedData;
-        } 
-
         if (cityFound) {
+            const isUpdateOperation = data.hasOwnProperty('id');
+            if (isUpdateOperation && data['id'] === cityFound['id']) {
+                return validatedData;
+            } 
             sendForbidden(`City slug '${data.slug}' already in use on City '${cityFound.name}'.`);
         } else {
             return validatedData;

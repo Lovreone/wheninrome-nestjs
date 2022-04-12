@@ -54,7 +54,8 @@ export class LandmarksService {
 
     /** To be used prior to saving slug to database: 
      * 1. Transforms submitted slug string into the required form
-     * 2. Checks if a Landmark with that slug already exists */
+     * 2. Checks if a Landmark with that slug already exists 
+     * 3. If found, make sure is is not the Landmark we're currently editing */
     async validateBodyData(data: LandmarkCreateUpdateDTO): Promise<LandmarkCreateUpdateDTO> {
         const validatedData = data;
 
@@ -63,13 +64,12 @@ export class LandmarksService {
             .replace(/[^a-zA-Z0-9 -]/g, '')
             .replaceAll(' ', '-'); 
         const landmarkFound = await this.landmarkModel.findOne({ slug: validatedData.slug });
-        
-        const isUpdateOperation = data.hasOwnProperty('id');
-        if (isUpdateOperation && data['id'] === landmarkFound['id']) {
-            return validatedData;
-        } 
 
         if (landmarkFound) {
+            const isUpdateOperation = data.hasOwnProperty('id');
+            if (isUpdateOperation && data['id'] === landmarkFound['id']) {
+                return validatedData;
+            } 
             sendForbidden(`Landmark slug '${data.slug}' already in use on Landmark '${landmarkFound.name}'.`);
         } else {
             return validatedData;
