@@ -9,8 +9,7 @@ export class CityConverter {
             model.slug || undefined,
             model.country || undefined,
             model.image || undefined,
-            model.description || undefined,
-            model.landmarks || undefined
+            model.description || undefined
         );
     }
 }
