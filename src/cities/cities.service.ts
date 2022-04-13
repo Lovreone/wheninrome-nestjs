@@ -1,14 +1,18 @@
-import { sendForbidden } from 'src/helpers/helpers';
-import { CityCreateUpdateDTO } from './city-create-update.dto';
-import { City } from './city.model';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { sendForbidden } from 'src/helpers/helpers';
+import { City } from './city.model';
+import { CityCreateUpdateDTO } from './city-create-update.dto';
+import { LandmarksService } from './../landmarks/landmarks.service';
+
 
 @Injectable()
 export class CitiesService {
     constructor(
-        @InjectModel('City') private readonly cityModel: Model<City>
+        @InjectModel('City') private readonly cityModel: Model<City>,
+        private landmarksService: LandmarksService
     ) {}
 
     async getAll(): Promise<City[]> {
@@ -48,21 +52,29 @@ export class CitiesService {
             .exec();
     }
 
-    /** To be used prior to saving slug to database: 
-     * 1. Transforms submitted slug string into the required form
-     * 2. Checks if a City with that slug already exists
-     * 3. If found, make sure is is not the City we're currently editing */
     async validateBodyData(data: CityCreateUpdateDTO): Promise<CityCreateUpdateDTO> {
+        const isUpdateOperation = data.hasOwnProperty('id');
+        /* Only if Admin changes a City name, update city-name value 
+           on all Landmarks from that City */
+        if (isUpdateOperation) {
+            const existingCity = await this.getSingleById(data['id']);
+            if (existingCity.name !== data.name) {
+                this.landmarksService.updateCityNames({
+                    id: data['id'],
+                    name: data.name
+                });
+            }    
+        }
+        /* Format url-slug value to desired form, check if it's
+           not already in use on other Landmark before saving */
         const validatedData = data;
-
         validatedData.slug = data.slug
             .trim()
             .replace(/[^a-zA-Z0-9 -]/g, '')
             .replaceAll(' ', '-');
         const cityFound = await this.cityModel.findOne({ slug: validatedData.slug });
-
         if (cityFound) {
-            const isUpdateOperation = data.hasOwnProperty('id');
+            /* Check that cityFound is not the City we're currently editing */
             if (isUpdateOperation && data['id'] === cityFound['id']) {
                 return validatedData;
             } 
