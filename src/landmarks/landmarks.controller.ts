@@ -23,6 +23,19 @@ export class LandmarksController {
         return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
     }
 
+    @Get('by-city/:id')
+    @ApiResponse({
+        status: 200,
+        type: [LandmarkDTO],
+        description: 'Returns the full list of Landmark documents for selected city'
+    })
+    async getLandmarksByCity(
+        @Param('id') cityId: string
+    ): Promise<LandmarkDTO[]> {
+        const landmarks = await this.landmarksService.getAll(cityId);
+        return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
+    }
+
     @Get(':id')
     @ApiResponse({
         status: 200,

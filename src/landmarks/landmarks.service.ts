@@ -13,8 +13,10 @@ export class LandmarksService {
         @InjectModel('Landmark') private readonly landmarkModel: Model<Landmark>
     ) {}
 
-    async getAll(): Promise<Landmark[]> {
-        return await this.landmarkModel.find().exec();
+    async getAll(cityId?: string): Promise<Landmark[]> {
+        return cityId ? 
+            await this.landmarkModel.find({ 'city.id': cityId }).exec() :
+            await this.landmarkModel.find().exec();
     }
 
     async getSingleById(landmarkId: string): Promise<Landmark> {
