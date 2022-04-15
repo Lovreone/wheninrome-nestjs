@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MinLength, MaxLength, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsBoolean } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CityCreateUpdateDTO {
@@ -30,5 +30,12 @@ export class CityCreateUpdateDTO {
     @IsOptional()
     @IsString()
     description: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    isActive: boolean;
+
+    createdAt: Date;
+    modifiedAt: Date;
 }
 // TODO: Make sure all constraints reflect the create/edit form in FE

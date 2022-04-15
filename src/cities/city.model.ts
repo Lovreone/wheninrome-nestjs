@@ -8,6 +8,9 @@ export const CitySchema = new Schema({
     country: { type: String, required: false },
     image: { type: String, required: false },
     description: { type: String, required: false },
+    isActive: { type: Boolean, required: true },
+    createdAt: { type: Date, required: false },
+    modifiedAt: { type: Date, required: false },
 });
 
 export class City extends mongoose.Document {
@@ -17,4 +20,7 @@ export class City extends mongoose.Document {
     country: string;
     image: string;
     description: string;
+    isActive: boolean;
+    createdAt: Date;
+    modifiedAt: Date;
 }

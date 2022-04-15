@@ -19,12 +19,34 @@ export class CityDTO {
     @ApiPropertyOptional()
     public description: string;
 
-    constructor(id: string, name: string, slug: string, country: string, image: string, description: string) {
+    @ApiPropertyOptional()
+    public isActive: boolean;
+
+    @ApiPropertyOptional()
+    public createdAt: Date;
+
+    @ApiPropertyOptional()
+    public modifiedAt: Date;
+
+    constructor(
+        id: string, 
+        name: string, 
+        slug: string, 
+        country: string, 
+        image: string, 
+        description: string, 
+        createdAt: Date,
+        modifiedAt: Date,
+        isActive: boolean
+    ) {
         this.id = id;
         this.name = name;
         this.slug = slug;
         this.country = country;
         this.image = image;
         this.description = description;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.isActive = isActive;
     }
 }

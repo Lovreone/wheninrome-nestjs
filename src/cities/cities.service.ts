@@ -53,34 +53,51 @@ export class CitiesService {
     }
 
     async validateBodyData(data: CityCreateUpdateDTO): Promise<CityCreateUpdateDTO> {
-        const isUpdateOperation = data.hasOwnProperty('id');
-        /* Only if Admin changes a City name, update city-name value 
-           on all Landmarks from that City */
-        if (isUpdateOperation) {
-            const existingCity = await this.getSingleById(data['id']);
-            if (existingCity.name !== data.name) {
-                this.landmarksService.updateCityNames({
-                    id: data['id'],
-                    name: data.name
-                });
-            }    
-        }
-        /* Format url-slug value to desired form, check if it's
-           not already in use on other Landmark before saving */
         const validatedData = data;
-        validatedData.slug = data.slug
+        const isUpdateOperation = validatedData.hasOwnProperty('id');
+
+        validatedData.slug = 
+            await this.validateCityClug(data, isUpdateOperation); 
+        
+        if (!isUpdateOperation) { 
+            validatedData.createdAt = new Date();
+        } else {
+            validatedData.modifiedAt = new Date();
+            await this.updateRelatedLandmarks(validatedData);
+        }
+        return validatedData;
+    }
+
+    /** Only if Admin changes a City name, update city-name value 
+        on all Landmarks from that City */
+    private async updateRelatedLandmarks(data: CityCreateUpdateDTO): Promise<void> {
+        const existingCity = await this.getSingleById(data['id']);
+        if (existingCity.name !== data.name) {
+            this.landmarksService.updateCityNames({
+                id: data['id'],
+                name: data.name
+            });
+        }    
+    }
+
+    /** Format url-slug value to desired form, check if it's
+        not already in use on other Landmark before saving */
+    private async validateCityClug(data: CityCreateUpdateDTO, isUpdate: boolean): Promise<string> {
+        data.slug = data.slug
             .trim()
             .replace(/[^a-zA-Z0-9 -]/g, '')
             .replaceAll(' ', '-');
-        const cityFound = await this.cityModel.findOne({ slug: validatedData.slug });
+        const cityFound = await this.cityModel.findOne({ slug: data.slug });
         if (cityFound) {
             /* Check that cityFound is not the City we're currently editing */
-            if (isUpdateOperation && data['id'] === cityFound['id']) {
-                return validatedData;
-            } 
-            sendForbidden(`City slug '${data.slug}' already in use on City '${cityFound.name}'.`);
+            if (isUpdate && data['id'] === cityFound['id']) {
+                return data.slug;
+            }
+            const resMessage = `City slug '${data.slug}' already in use on City '${cityFound.name}'.`
+            console.info(resMessage)
+            sendForbidden(resMessage);
         } else {
-            return validatedData;
+            return data.slug;
         }
     }
 }
