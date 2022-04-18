@@ -72,14 +72,17 @@ export class CitiesService {
         return validatedData;
     }
 
-    /** Only if Admin changes a City name, update city-name value 
-        on all Landmarks from that City */
+    /** Each time Admin changes 'city name' or 'privacy options', we update 
+     *  the 'nested city' object on all Landmarks where that city is assigned */
     private async updateRelatedLandmarks(data: CityCreateUpdateDTO): Promise<void> {
         const existingCity = await this.getSingleById(data['id']);
-        if (existingCity.name !== data.name) {
-            this.landmarksService.updateCityNames({
+        const isChangedName = existingCity.name !== data.name;
+        const isChangedPrivacy = existingCity.isActive !== data.isActive;
+        if (isChangedName || isChangedPrivacy) {
+            this.landmarksService.updateLandmarksNestedCities({
                 id: data['id'],
-                name: data.name
+                name: data.name,
+                isActive: data.isActive
             });
         }    
     }

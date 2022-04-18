@@ -6,7 +6,12 @@ export const LandmarkSchema = new mongoose.Schema({
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: false },
     entranceFee: { type: Number, required: true },
-    city: { id: String, name: String, required: false }
+    city: { 
+        id: String, 
+        name: String, 
+        isActive: Boolean, 
+        required: false 
+    }
 });
 
 // Entity Model (Database)
@@ -22,4 +27,5 @@ export class Landmark extends mongoose.Document {
 export interface NestedCity {
     id: string;
     name: string;
+    isActive: boolean;
 }

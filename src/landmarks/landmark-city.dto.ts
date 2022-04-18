@@ -9,4 +9,7 @@ export class LandmarkCityDTO {
     @ApiProperty()
     @IsString()
     public name: string;
+
+    @ApiProperty()
+    public isActive: boolean;
 }

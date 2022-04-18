@@ -76,14 +76,17 @@ export class LandmarksService {
         }
     }
 
-    /** A copy of a City name is stored directly into a Landmark, to have it 
-     *  readily available without making a getCity call for each item in Landmark lists. 
-     *  If an admin decides to change a city name (a rare operation), 
-     *  this query will be run to update the city-name on all Landmarks in that City */
-    async updateCityNames(landmarkCity: LandmarkCityDTO): Promise<void> {       
+    /** We keep a shortened copy of a parent City (id, name, isActive) stored directly on Landmarks, 
+     *  to have it readily available on Landmark lists, without making another getCity call. 
+     *  When admin changes 'city name' or 'city privacy', we run this query to update 
+     *  the 'shortened city' details stored on all Landmarks with that City */
+    async updateLandmarksNestedCities(landmarkCity: LandmarkCityDTO): Promise<void> {       
         const response = await this.landmarkModel.updateMany(
-            { 'city.id': new Types.ObjectId(landmarkCity.id) },  
-            { 'city.name': landmarkCity.name }
+            { 'city.id': new Types.ObjectId(landmarkCity.id) }, 
+            { '$set': { 
+                'city.name': landmarkCity.name, 
+                'city.isActive': landmarkCity.isActive 
+            }}
         ).exec();
         if (response.modifiedCount > 0) {
             console.info(`Successfully updated ${response.modifiedCount} landmarks with new city name: '${landmarkCity.name}'`);
