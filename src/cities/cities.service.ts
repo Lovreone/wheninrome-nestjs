@@ -19,6 +19,10 @@ export class CitiesService {
         return await this.cityModel.find().exec();
     }
 
+    async getAllActive(): Promise<City[]> {
+        return await this.cityModel.find({ isActive: true }).exec();
+    }
+
     async getSingleById(cityId: string): Promise<City> {
         return await this.cityModel
             .findById(cityId)
@@ -28,7 +32,7 @@ export class CitiesService {
 
     async getSingleBySlug(citySlug: string): Promise<City> {
         return await this.cityModel
-            .findOne({ slug: citySlug })
+            .findOne({ slug: citySlug, isActive: true })
             .orFail(() => { throw new NotFoundException('City not found.') })
             .exec();
     }

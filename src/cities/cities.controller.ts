@@ -18,8 +18,19 @@ export class CitiesController {
         type: [CityDTO],
         description: 'Returns the full list of City documents'
     })
-    async getCities(): Promise<CityDTO[]> {
+    async getAllCities(): Promise<CityDTO[]> {
         const cities = await this.citiesService.getAll();
+        return cities.map(city => CityConverter.convertToDto(city)); 
+    }
+
+    @Get('active')
+    @ApiResponse({
+        status: 200,
+        type: [CityDTO],
+        description: 'Returns the list of active City documents'
+    })
+    async getActiveCities(): Promise<CityDTO[]> {
+        const cities = await this.citiesService.getAllActive();
         return cities.map(city => CityConverter.convertToDto(city)); 
     }
 
