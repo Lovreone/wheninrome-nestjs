@@ -19,7 +19,7 @@ export class LandmarksController {
         description: 'Returns the full list of Landmark documents'
     })
     async getLandmarks(): Promise<LandmarkDTO[]> {
-        const landmarks = await this.landmarksService.getAll();
+        const landmarks = await this.landmarksService.getAllLandmarks();
         return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
     }
 
@@ -32,7 +32,7 @@ export class LandmarksController {
     async getLandmarksByCity(
         @Param('id') cityId: string
     ): Promise<LandmarkDTO[]> {
-        const landmarks = await this.landmarksService.getAll(cityId);
+        const landmarks = await this.landmarksService.getAllLandmarks(cityId);
         return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
     }
 
@@ -40,7 +40,7 @@ export class LandmarksController {
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
-        description: 'Returned a single Landmark document document by ID'
+        description: 'Returns a single Landmark document document by ID'
     })
     async getLandmarkById(
         @Param('id') landmarkId: string
@@ -53,7 +53,7 @@ export class LandmarksController {
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
-        description: 'Returned a single Landmark document by slug'
+        description: 'Returns a single Landmark document by slug'
     })
     async getLandmarkBySlug(
         @Param('slug') landmarkSlug: string
@@ -67,7 +67,7 @@ export class LandmarksController {
     @ApiResponse({
         status: 201,
         type: LandmarkDTO,
-        description: 'Returned the created Landmark document'
+        description: 'Returns the created Landmark document'
     })
     @ApiBody({
         type: LandmarkCreateUpdateDTO
@@ -84,7 +84,7 @@ export class LandmarksController {
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
-        description: 'Returned the updated Landmark document'
+        description: 'Returns the updated Landmark document'
     })
     @ApiBody({
         type: LandmarkCreateUpdateDTO
@@ -102,7 +102,7 @@ export class LandmarksController {
     @HttpCode(204)
     @ApiResponse({
         status: 204,
-        description: 'Deleted Landmark document by ID'
+        description: 'Deletes Landmark document by ID'
     })
     async delete(
         @Param('id') landmarkId: string
