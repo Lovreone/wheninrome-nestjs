@@ -11,7 +11,10 @@ export const LandmarkSchema = new mongoose.Schema({
         name: String, 
         isActive: Boolean, 
         required: false 
-    }
+    },
+    isActive: { type: Boolean, required: true },
+    createdAt: { type: Date, required: false },
+    modifiedAt: { type: Date, required: false },
 });
 
 // Entity Model (Database)
@@ -22,6 +25,9 @@ export class Landmark extends mongoose.Document {
     description: string;
     entranceFee: number;
     city: NestedCity;
+    isActive: boolean;
+    createdAt: Date;
+    modifiedAt: Date;
 }
 
 export interface NestedCity {

@@ -4,12 +4,15 @@ import { Landmark } from './landmark.model';
 export class LandmarkConverter {
     public static convertToDto(model: Landmark): LandmarkDTO {
         return new LandmarkDTO(
-            model.id,
-            model.name,
-            model.slug,
-            model.description,
-            model.entranceFee,
-            model.city
+            model.id || undefined,
+            model.name || undefined,
+            model.slug || undefined,
+            model.description || undefined,
+            model.entranceFee || undefined,
+            model.city || undefined,
+            model.isActive,
+            model.createdAt || undefined,
+            model.modifiedAt || undefined
         );
     }
 

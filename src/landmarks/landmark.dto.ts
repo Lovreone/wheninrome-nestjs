@@ -20,13 +20,26 @@ export class LandmarkDTO {
     @ApiPropertyOptional()
     public city: LandmarkCityDTO;
 
+    @ApiPropertyOptional()
+    public isActive: boolean;
+
+    @ApiPropertyOptional()
+    public createdAt: Date;
+
+    @ApiPropertyOptional()
+    public modifiedAt: Date;
+
     constructor(
         id: string, 
         name: string, 
         slug: string, 
         description: string, 
         entranceFee: number, 
-        city: LandmarkCityDTO
+        city: LandmarkCityDTO,
+        isActive: boolean,
+        createdAt: Date,
+        modifiedAt: Date,
+        
     ) {
         this.id = id;
         this.name = name;
@@ -34,5 +47,8 @@ export class LandmarkDTO {
         this.description = description;
         this.entranceFee = entranceFee;
         this.city = city;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.isActive = isActive;
     }
 }
