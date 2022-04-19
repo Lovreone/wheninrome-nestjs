@@ -1,8 +1,6 @@
 import * as mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-export const CitySchema = new Schema({
+export const CitySchema = new mongoose.Schema({
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     country: { type: String, required: false },

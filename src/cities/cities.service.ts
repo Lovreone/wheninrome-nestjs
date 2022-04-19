@@ -61,7 +61,7 @@ export class CitiesService {
         const isUpdateOperation = validatedData.hasOwnProperty('id');
 
         validatedData.slug = 
-            await this.validateCityClug(data, isUpdateOperation); 
+            await this.validateCityClug(validatedData, isUpdateOperation); 
         
         if (!isUpdateOperation) { 
             validatedData.createdAt = new Date();
@@ -88,7 +88,7 @@ export class CitiesService {
     }
 
     /** Format url-slug value to desired form, check if it's
-        not already in use on other Landmark before saving */
+     * not already in use on other City before saving */
     private async validateCityClug(data: CityCreateUpdateDTO, isUpdate: boolean): Promise<string> {
         data.slug = data.slug
             .trim()
@@ -100,7 +100,8 @@ export class CitiesService {
             if (isUpdate && data['id'] === cityFound['id']) {
                 return data.slug;
             }
-            const resMessage = `City slug '${data.slug}' already in use on City '${cityFound.name}'.`
+            const resMessage = 
+                `Slug '${data.slug}' already in use on City '${cityFound.name}'.`
             console.info(resMessage)
             sendForbidden(resMessage);
         } else {

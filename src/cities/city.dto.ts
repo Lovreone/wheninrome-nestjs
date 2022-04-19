@@ -35,9 +35,10 @@ export class CityDTO {
         country: string, 
         image: string, 
         description: string, 
+        isActive: boolean,
         createdAt: Date,
         modifiedAt: Date,
-        isActive: boolean
+
     ) {
         this.id = id;
         this.name = name;
@@ -45,8 +46,8 @@ export class CityDTO {
         this.country = country;
         this.image = image;
         this.description = description;
+        this.isActive = isActive;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.isActive = isActive;
     }
 }
