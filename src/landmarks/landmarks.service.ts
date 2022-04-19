@@ -15,7 +15,7 @@ export class LandmarksService {
 
     async getAllLandmarks(cityId?: string): Promise<Landmark[]> {
         return cityId ? 
-            await this.landmarkModel.find({ 'city.id': cityId }).exec() :
+            await this.landmarkModel.find({ 'city.id': cityId, isActive: true }).exec() :
             await this.landmarkModel.find().exec();
     }
 
@@ -31,7 +31,7 @@ export class LandmarksService {
         const landmarkFound = await this.landmarkModel
             .findOne({ slug: landmarkSlug })
             .orFail(() => {throw new NotFoundException('Landmark not found.')});
-        if (landmarkFound.city.isActive) {
+        if (landmarkFound.city.isActive && landmarkFound.isActive) {
             return landmarkFound;
         } else {
             sendNotFound('Landmark not found.');

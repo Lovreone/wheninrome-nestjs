@@ -102,7 +102,7 @@ export class CitiesService {
             }
             const resMessage = 
                 `Slug '${data.slug}' already in use on City '${cityFound.name}'.`
-            console.info(resMessage)
+            console.info(resMessage);
             sendForbidden(resMessage);
         } else {
             return data.slug;
