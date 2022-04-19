@@ -1,6 +1,6 @@
 import { LandmarkCityDTO } from './landmark-city.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength, IsNumber, MinLength, IsNotEmpty, Min, IsBoolean } from 'class-validator';
+import { IsOptional, IsString, MaxLength, IsNumber, MinLength, IsNotEmpty, Min, IsBoolean, IsUrl } from 'class-validator';
 
 export class LandmarkCreateUpdateDTO {
     @ApiProperty()
@@ -26,6 +26,36 @@ export class LandmarkCreateUpdateDTO {
     @IsNumber()
     @Min(0)
     entranceFee: number;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUrl()
+    officialWebsite: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    featuredImage: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    howToArrive: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    workingDays: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    workingHours: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    coordinates: string;
 
     @ApiPropertyOptional({ type: LandmarkCityDTO })
     @IsOptional()

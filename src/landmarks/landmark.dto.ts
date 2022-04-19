@@ -16,6 +16,24 @@ export class LandmarkDTO {
 
     @ApiProperty()
     public entranceFee: number;
+
+    @ApiPropertyOptional()
+    public officialWebsite: string;
+
+    @ApiPropertyOptional()
+    public featuredImage: string;
+
+    @ApiPropertyOptional()
+    public howToArrive: string;
+
+    @ApiPropertyOptional()
+    public workingDays: string;
+
+    @ApiPropertyOptional()
+    public workingHours: string;
+
+    @ApiPropertyOptional()
+    public coordinates: string;
    
     @ApiPropertyOptional()
     public city: LandmarkCityDTO;
@@ -35,6 +53,12 @@ export class LandmarkDTO {
         slug: string, 
         description: string, 
         entranceFee: number, 
+        officialWebsite: string,
+        featuredImage: string,
+        howToArrive: string,
+        workingDays: string,
+        workingHours: string,
+        coordinates: string,
         city: LandmarkCityDTO,
         isActive: boolean,
         createdAt: Date,
@@ -46,6 +70,12 @@ export class LandmarkDTO {
         this.slug = slug;
         this.description = description;
         this.entranceFee = entranceFee;
+        this.officialWebsite = officialWebsite;
+        this.featuredImage = featuredImage;
+        this.howToArrive = howToArrive;
+        this.workingDays = workingDays;
+        this.workingHours = workingHours;
+        this.coordinates = coordinates;
         this.city = city;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;

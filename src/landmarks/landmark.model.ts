@@ -6,6 +6,12 @@ export const LandmarkSchema = new mongoose.Schema({
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: false },
     entranceFee: { type: Number, required: true },
+    officialWebsite: { type: String, required: false },
+    featuredImage: { type: String, required: false },
+    howToArrive: { type: String, required: false },
+    workingDays: { type: String, required: false },
+    workingHours: { type: String, required: false },
+    coordinates: { type: String, required: false },
     city: { 
         id: String, 
         name: String, 
@@ -24,6 +30,12 @@ export class Landmark extends mongoose.Document {
     slug: string;
     description: string;
     entranceFee: number;
+    officialWebsite: string;
+    featuredImage: string;
+    howToArrive: string;
+    workingDays: string;
+    workingHours: string;
+    coordinates: string;
     city: NestedCity;
     isActive: boolean;
     createdAt: Date;
