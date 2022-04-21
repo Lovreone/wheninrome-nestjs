@@ -77,7 +77,7 @@ export class LandmarksService {
         return validatedData;
     }
 
-    /** We keep a shortened copy of a parent City (id, name, isActive) stored directly on Landmarks, 
+    /** We keep a shortened copy of a parent City (id, name, slug, isActive) stored directly on Landmarks, 
      *  to have it readily available on Landmark lists, without making another getCity call. 
      *  When admin changes 'city name' or 'city privacy', we run this query to update 
      *  the 'shortened city' details stored on all Landmarks with that City */
@@ -86,6 +86,7 @@ export class LandmarksService {
             { 'city.id': new Types.ObjectId(landmarkCity.id) }, 
             { '$set': { 
                 'city.name': landmarkCity.name, 
+                'city.slug': landmarkCity.slug, 
                 'city.isActive': landmarkCity.isActive 
             }}
         ).exec();

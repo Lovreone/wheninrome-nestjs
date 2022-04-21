@@ -14,7 +14,8 @@ export const LandmarkSchema = new mongoose.Schema({
     coordinates: { type: String, required: false },
     city: { 
         id: String, 
-        name: String, 
+        name: String,
+        slug: String,
         isActive: Boolean, 
         required: false 
     },
@@ -45,5 +46,6 @@ export class Landmark extends mongoose.Document {
 export interface NestedCity {
     id: string;
     name: string;
+    slug: string;
     isActive: boolean;
 }

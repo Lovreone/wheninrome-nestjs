@@ -11,5 +11,8 @@ export class LandmarkCityDTO {
     public name: string;
 
     @ApiProperty()
+    public slug: string;
+
+    @ApiProperty()
     public isActive: boolean;
 }
