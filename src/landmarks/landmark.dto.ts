@@ -11,6 +11,9 @@ export class LandmarkDTO {
     @ApiProperty()
     public slug: string;
 
+    @ApiProperty()
+    public introText: string;
+
     @ApiPropertyOptional()
     public description: string;
 
@@ -51,6 +54,7 @@ export class LandmarkDTO {
         id: string, 
         name: string, 
         slug: string, 
+        introText: string,
         description: string, 
         entranceFee: number, 
         officialWebsite: string,
@@ -68,6 +72,7 @@ export class LandmarkDTO {
         this.id = id;
         this.name = name;
         this.slug = slug;
+        this.introText = introText;
         this.description = description;
         this.entranceFee = entranceFee;
         this.officialWebsite = officialWebsite;

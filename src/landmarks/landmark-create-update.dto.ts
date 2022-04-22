@@ -16,6 +16,10 @@ export class LandmarkCreateUpdateDTO {
     @MinLength(3)
     slug: string;
 
+    @ApiProperty()
+    @IsString()
+    introText: string;
+
     @ApiPropertyOptional()
     @IsOptional()
     @IsString()

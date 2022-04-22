@@ -7,6 +7,7 @@ export class LandmarkConverter {
             model.id || undefined,
             model.name || undefined,
             model.slug || undefined,
+            model.introText || undefined,
             model.description || undefined,
             model.entranceFee || undefined,
             model.officialWebsite || undefined,

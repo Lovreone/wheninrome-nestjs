@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 export const LandmarkSchema = new mongoose.Schema({
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
+    introText: { type: String, required: true },
     description: { type: String, required: false },
     entranceFee: { type: Number, required: true },
     officialWebsite: { type: String, required: false },
@@ -29,6 +30,7 @@ export class Landmark extends mongoose.Document {
     id: string;
     name: string;
     slug: string;
+    introText: string;
     description: string;
     entranceFee: number;
     officialWebsite: string;
