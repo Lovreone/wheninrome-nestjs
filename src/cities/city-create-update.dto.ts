@@ -24,7 +24,17 @@ export class CityCreateUpdateDTO {
     @ApiPropertyOptional()
     @IsOptional()
     @IsString()
-    image: string;
+    featuredImage: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    introText: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    localCurrency: string;
 
     @ApiPropertyOptional()
     @IsOptional()

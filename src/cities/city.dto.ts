@@ -14,7 +14,13 @@ export class CityDTO {
     public country: string;
 
     @ApiPropertyOptional()
-    public image: string;
+    public featuredImage: string;
+
+    @ApiPropertyOptional()
+    public introText: string;
+
+    @ApiPropertyOptional()
+    public localCurrency: string
 
     @ApiPropertyOptional()
     public description: string;
@@ -33,7 +39,9 @@ export class CityDTO {
         name: string, 
         slug: string, 
         country: string, 
-        image: string, 
+        featuredImage: string, 
+        introText: string,
+        localCurrency: string,
         description: string, 
         isActive: boolean,
         createdAt: Date,
@@ -44,7 +52,9 @@ export class CityDTO {
         this.name = name;
         this.slug = slug;
         this.country = country;
-        this.image = image;
+        this.featuredImage = featuredImage;
+        this.introText = introText;
+        this.localCurrency= localCurrency;        
         this.description = description;
         this.isActive = isActive;
         this.createdAt = createdAt;
