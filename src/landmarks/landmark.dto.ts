@@ -17,7 +17,7 @@ export class LandmarkDTO {
     @ApiPropertyOptional()
     public description: string;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     public entranceFee: number;
 
     @ApiPropertyOptional()

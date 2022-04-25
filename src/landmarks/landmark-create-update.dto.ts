@@ -25,8 +25,8 @@ export class LandmarkCreateUpdateDTO {
     @IsString()
     description: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiPropertyOptional()
+    @IsOptional()
     @IsNumber()
     @Min(0)
     entranceFee: number;

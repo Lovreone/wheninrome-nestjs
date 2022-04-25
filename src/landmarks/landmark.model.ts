@@ -6,7 +6,7 @@ export const LandmarkSchema = new mongoose.Schema({
     slug: { type: String, required: true, unique: true },
     introText: { type: String, required: true },
     description: { type: String, required: false },
-    entranceFee: { type: Number, required: true },
+    entranceFee: { type: Number, required: false },
     officialWebsite: { type: String, required: false },
     featuredImage: { type: String, required: false },
     howToArrive: { type: String, required: false },
