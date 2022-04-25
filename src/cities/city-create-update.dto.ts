@@ -18,7 +18,6 @@ export class CityCreateUpdateDTO {
     @ApiPropertyOptional()
     @IsOptional()
     @IsString()
-    @MinLength(3)
     country: string;
 
     @ApiPropertyOptional()
