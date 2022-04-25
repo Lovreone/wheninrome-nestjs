@@ -26,8 +26,7 @@ export class CityCreateUpdateDTO {
     @IsString()
     featuredImage: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
+    @ApiProperty()
     @IsString()
     introText: string;
 

@@ -5,7 +5,7 @@ export const CitySchema = new mongoose.Schema({
     slug: { type: String, required: true, unique: true },
     country: { type: String, required: false },
     featuredImage: { type: String, required: false },
-    introText: { type: String, required: false },
+    introText: { type: String, required: true },
     localCurrency: { type: String, required: false },
     description: { type: String, required: false },
     isActive: { type: Boolean, required: true },

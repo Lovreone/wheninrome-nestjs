@@ -16,7 +16,7 @@ export class CityDTO {
     @ApiPropertyOptional()
     public featuredImage: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     public introText: string;
 
     @ApiPropertyOptional()
