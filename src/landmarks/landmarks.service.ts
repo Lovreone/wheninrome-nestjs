@@ -100,6 +100,7 @@ export class LandmarksService {
     private async validateLandmarkSlug(data: LandmarkCreateUpdateDTO, isUpdate: boolean): Promise<string> {
         data.slug = data.slug
             .trim()
+            .toLowerCase()
             .replace(/[^a-zA-Z0-9 -]/g, '')
             .replaceAll(' ', '-');
         const landmarkFound = await this.landmarkModel.findOne({ slug: data.slug });

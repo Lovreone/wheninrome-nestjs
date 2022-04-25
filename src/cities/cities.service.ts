@@ -94,6 +94,7 @@ export class CitiesService {
     private async validateCityClug(data: CityCreateUpdateDTO, isUpdate: boolean): Promise<string> {
         data.slug = data.slug
             .trim()
+            .toLowerCase()
             .replace(/[^a-zA-Z0-9 -]/g, '')
             .replaceAll(' ', '-');
         const cityFound = await this.cityModel.findOne({ slug: data.slug });
