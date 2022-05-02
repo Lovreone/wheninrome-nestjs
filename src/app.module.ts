@@ -1,13 +1,14 @@
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/roles.guard';
 import { Config } from './../config/config';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module'
+import { UsersModule } from './users/users.module';
 import { LandmarksModule } from './landmarks/landmarks.module';
 import { CitiesModule } from './cities/cities.module';
-;
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { CitiesModule } from './cities/cities.module';
   controllers: [
     AppController
   ],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD, // global roles guard
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

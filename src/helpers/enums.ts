@@ -10,3 +10,9 @@ export enum LandmarkType {
     Square = 'Square',
     // TODO: This should be created/managed by admin instead of hardcoding
 }
+
+// TODO: Rethink if we want to store roles within a database
+export enum Role {
+    User = 'user',
+    Admin = 'admin',
+}
