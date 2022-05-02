@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { Role } from 'src/helpers/enums';
 
 export const UserSchema = new mongoose.Schema({
     // username: { type: String, required: true }, // See later
@@ -10,6 +11,7 @@ export const UserSchema = new mongoose.Schema({
     isActive: { type: Boolean, required: true },
     createdAt: { type: Date, required: false },
     modifiedAt: { type: Date, required: false },
+    roles: { type: [Role], required: true }
 });
 
 export class User extends mongoose.Document {
@@ -23,4 +25,5 @@ export class User extends mongoose.Document {
     isActive: boolean;
     createdAt: Date;
     modifiedAt: Date;
+    roles: Role[];
 }
