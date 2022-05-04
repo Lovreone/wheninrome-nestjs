@@ -61,7 +61,7 @@ export class CitiesService {
         const isUpdateOperation = validatedData.hasOwnProperty('id');
 
         validatedData.slug = 
-            await this.validateCityClug(validatedData, isUpdateOperation); 
+            await this.validateCitySlug(validatedData, isUpdateOperation); 
         
         if (!isUpdateOperation) { 
             validatedData.createdAt = new Date();
@@ -91,7 +91,7 @@ export class CitiesService {
 
     /** Format url-slug value to desired form, check if it's
      * not already in use on other City before saving */
-    private async validateCityClug(data: CityCreateUpdateDTO, isUpdate: boolean): Promise<string> {
+    private async validateCitySlug(data: CityCreateUpdateDTO, isUpdate: boolean): Promise<string> {
         data.slug = data.slug
             .trim()
             .toLowerCase()
