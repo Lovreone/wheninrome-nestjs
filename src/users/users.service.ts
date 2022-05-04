@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { sendForbidden } from 'src/helpers/helpers';
 import { Role } from 'src/helpers/enums';
 import { User, UserDocument } from './user.model';
 import { UserUpdateDTO } from './user-update.dto';
@@ -79,5 +80,34 @@ export class UsersService {
         .deleteOne({ _id: userId })
         .orFail(() => { throw new NotFoundException('User not found.') })
         .exec();
+  }
+
+  async validateBodyData(data: UserCreateDTO): Promise<UserCreateDTO> {
+    const validatedData = data;
+    validatedData.username = await this.validateUsername(validatedData.username); 
+    validatedData.createdAt = new Date();
+    validatedData.isActive = true;
+    validatedData.roles = [Role.User];
+
+    return validatedData;
+  }
+
+  /** Format username value to desired form, check if it's
+     * not already in use by other User before saving */
+   private async validateUsername(username: string): Promise<string> {
+    const formattedUsername = username
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9 -]/g, '')
+        .replaceAll(' ', '-');
+    const userFound = await this.userModel.findOne({ username: formattedUsername });
+    if (userFound) {
+        const resMessage = 
+            `Username '${formattedUsername}' already in use.`
+        console.info(resMessage + ` (User '${userFound.email}')`);
+        sendForbidden(resMessage);
+    } else {
+        return formattedUsername;
+    }
   }
 }
