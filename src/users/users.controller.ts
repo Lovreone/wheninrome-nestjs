@@ -18,7 +18,7 @@ export class UsersController {
     @ApiResponse({
         status: 201,
         type: UserDTO,
-        description: 'Returned the created City document'
+        description: 'Returned the created User document'
     })
     @ApiBody({
         type: UserCreateDTO
@@ -27,9 +27,8 @@ export class UsersController {
         @Body() body: UserCreateDTO
 
     ): Promise<UserDTO> {
-        const validatedBody = await this.usersService.validateBodyData(body);
+        const validatedBody = await this.usersService.validateCreateBodyData(body);
         const newUser = await this.usersService.insert(validatedBody);
-        console.info('USER created:', newUser);
         return UserConverter.convertToDto(newUser);
     }
 }

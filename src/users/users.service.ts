@@ -6,6 +6,7 @@ import { Role } from 'src/helpers/enums';
 import { User, UserDocument } from './user.model';
 import { UserUpdateDTO } from './user-update.dto';
 import { UserCreateDTO } from './user-create.dto';
+import { isValidEmailFormat } from 'src/helpers/email-validator';
 
 @Injectable()
 export class UsersService {
@@ -58,7 +59,7 @@ export class UsersService {
 
   async getSingleBySlug(username: string): Promise<User> {
     return await this.userModel
-        .findOne({ userName: username, isActive: true })
+        .findOne({ username: username, isActive: true })
         .orFail(() => { throw new NotFoundException('User not found.') })
         .exec();
   }
@@ -82,32 +83,49 @@ export class UsersService {
         .exec();
   }
 
-  async validateBodyData(data: UserCreateDTO): Promise<UserCreateDTO> {
+  async validateCreateBodyData(data: UserCreateDTO): Promise<UserCreateDTO> {
     const validatedData = data;
-    validatedData.username = await this.validateUsername(validatedData.username); 
+
+    if (!isValidEmailFormat(validatedData.email)) {
+      const resMessage = `Invalid email format for: '${validatedData.email}'.`
+      console.info(resMessage)
+      sendForbidden(resMessage);
+    }
+
+    // TODO: Try to find a more elegant way to handle
+    let cleanUsername = data.username
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9 -]/g, '')
+      .replaceAll(' ', '-');
+    await this.isExistsEmailOrUsername(validatedData.email, cleanUsername);
+    data.username = cleanUsername; 
+
+    // TODO: validatePass(pass) > Pass+Salt > Hash > Save
+
     validatedData.createdAt = new Date();
+    validatedData.modifiedAt = new Date();
     validatedData.isActive = true;
     validatedData.roles = [Role.User];
 
     return validatedData;
-  }
+  } 
 
-  /** Format username value to desired form, check if it's
-     * not already in use by other User before saving */
-   private async validateUsername(username: string): Promise<string> {
-    const formattedUsername = username
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-zA-Z0-9 -]/g, '')
-        .replaceAll(' ', '-');
-    const userFound = await this.userModel.findOne({ username: formattedUsername });
+  private async isExistsEmailOrUsername(email: string, username: string): Promise<void> {
+    // We check for both here, to only do one db call instead of two
+    const userFound = await this.userModel.findOne().or([
+        {email: email}, 
+        {username: username}
+      ]);
     if (userFound) {
-        const resMessage = 
-            `Username '${formattedUsername}' already in use.`
-        console.info(resMessage + ` (User '${userFound.email}')`);
-        sendForbidden(resMessage);
-    } else {
-        return formattedUsername;
+      let resMessage = '';
+      if (userFound.email === email) {
+        resMessage = resMessage.concat(`Email: '${email}' `);
+      }
+      if (userFound.username === username) {
+        resMessage = resMessage.concat(`Username: '${username}' `);
+      }
+      sendForbidden(resMessage + ' already in use.');
     }
   }
 }
