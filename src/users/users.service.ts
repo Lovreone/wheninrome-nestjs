@@ -15,31 +15,10 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<UserDocument>
   ) {}
 
-  // FIXME: Temp, get from db
-  private readonly users: User[] = [
-    {
-      username: 'johnwayne',
-      email: 'john@doe.com',
-      firstName: 'John',
-      lastName: 'Wayne',
-      isActive: true,
-      password: 'changeme',
-      roles: [Role.Admin]
-    },
-    {
-      username: 'mariarita',
-      email: 'maria@rita.com',
-      password: 'guess',
-      firstName: 'Maria',
-      lastName: 'Rita',
-      isActive: true,
-      roles: [Role.User]
-    },
-  ];
-  
-  // TODO: Remove later, get from db
-  async findOne(username: string): Promise<User | undefined> {
-      return this.users.find(user => user.username === username);
+  async getSingleByUsername(username: string): Promise<User | undefined> {
+    return await this.userModel
+      .findOne({ username: username })
+      .exec();;
   }
 
   async getAll(): Promise<User[]> {
@@ -53,13 +32,6 @@ export class UsersService {
   async getSingleById(userId: string): Promise<User> {
     return await this.userModel
         .findById(userId)
-        .orFail(() => { throw new NotFoundException('User not found.') })
-        .exec();
-  }
-
-  async getSingleBySlug(username: string): Promise<User> {
-    return await this.userModel
-        .findOne({ username: username, isActive: true })
         .orFail(() => { throw new NotFoundException('User not found.') })
         .exec();
   }
@@ -113,10 +85,10 @@ export class UsersService {
 
   private async isExistsEmailOrUsername(email: string, username: string): Promise<void> {
     // We check for both here, to only do one db call instead of two
-    const userFound = await this.userModel.findOne().or([
-        {email: email}, 
-        {username: username}
-      ]);
+    const userFound = await this.userModel
+      .findOne()
+      .or([ {email: email}, {username: username} ])
+      .exec();
     if (userFound) {
       let resMessage = '';
       if (userFound.email === email) {
