@@ -66,7 +66,7 @@ export class UsersService {
     }
 
     // TODO: Try to find a more elegant way to handle
-    let cleanUsername = data.username
+    const cleanUsername = data.username
       .trim()
       .toLowerCase()
       .replace(/[^a-zA-Z0-9 -]/g, '')
