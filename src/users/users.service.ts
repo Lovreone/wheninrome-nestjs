@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt'
 import { sendForbidden } from 'src/helpers/helpers';
 import { Role } from 'src/helpers/enums';
 import { User, UserDocument } from './user.model';
@@ -74,7 +75,9 @@ export class UsersService {
     data.username = cleanUsername; 
 
     // TODO: validatePass(pass) > Pass+Salt > Hash > Save
-
+    await this.generateSecurePassword(data.password)
+      .then((securePass) => data.password = securePass);
+    
     validatedData.createdAt = new Date();
     validatedData.modifiedAt = new Date();
     validatedData.isActive = true;
@@ -83,8 +86,8 @@ export class UsersService {
     return validatedData;
   } 
 
+  // We check for both here, to only do one db call instead of two
   private async isExistsEmailOrUsername(email: string, username: string): Promise<void> {
-    // We check for both here, to only do one db call instead of two
     const userFound = await this.userModel
       .findOne()
       .or([ {email: email}, {username: username} ])
@@ -99,5 +102,12 @@ export class UsersService {
       }
       sendForbidden(resMessage + ' already in use.');
     }
+  }
+
+  // Bcrypt docs: https://github.com/kelektiv/node.bcrypt.js#readme
+  private async generateSecurePassword(rawPassword: string): Promise<string> {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    return await bcrypt.hash(rawPassword, salt);
   }
 }
