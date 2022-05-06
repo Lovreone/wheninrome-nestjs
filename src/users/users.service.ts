@@ -75,8 +75,7 @@ export class UsersService {
     data.username = cleanUsername; 
 
     // TODO: validatePass(pass) > Pass+Salt > Hash > Save
-    await this.generateSecurePassword(data.password)
-      .then((securePass) => data.password = securePass);
+    data.password = await this.hashPassword(data.password);
     
     validatedData.createdAt = new Date();
     validatedData.modifiedAt = new Date();
@@ -105,9 +104,7 @@ export class UsersService {
   }
 
   // Bcrypt docs: https://github.com/kelektiv/node.bcrypt.js#readme
-  private async generateSecurePassword(rawPassword: string): Promise<string> {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    return await bcrypt.hash(rawPassword, salt);
+  private async hashPassword(rawPassword: string): Promise<string> {
+    return await bcrypt.hash(rawPassword, 10);
   }
 }
