@@ -7,7 +7,10 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super();
+    super({ 
+      usernameField: 'email',
+      passwordField: 'password'
+    });
     /* https://docs.nestjs.com/security/authentication
     Vanilla Passport
     [1] A set of options that are specific to that strategy. 
@@ -54,8 +57,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
    with the following signature: 
    validate(username: string, password:string): any.
   */
-  async validate(username: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(username, password);
+  async validate(email: string, password: string): Promise<any> {
+    const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException();
     }

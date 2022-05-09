@@ -22,6 +22,12 @@ export class UsersService {
       .exec();;
   }
 
+  async getSingleByEmail(email: string): Promise<User | undefined> {
+    return await this.userModel
+      .findOne({ email: email })
+      .exec();;
+  }
+
   async getAll(): Promise<User[]> {
     return await this.userModel.find().exec();
   }
