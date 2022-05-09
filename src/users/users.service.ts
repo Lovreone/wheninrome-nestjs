@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt'
 import { sendForbidden } from 'src/helpers/helpers';
 import { Role } from 'src/helpers/enums';
 import { User, UserDocument } from './user.model';
 import { UserUpdateDTO } from './user-update.dto';
 import { UserCreateDTO } from './user-create.dto';
 import { isValidEmailFormat } from 'src/helpers/email-validator';
+import { hashPassword } from 'src/utils/bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -65,17 +65,16 @@ export class UsersService {
       sendForbidden(resMessage);
     }
 
-    // TODO: Try to find a more elegant way to handle
-    const cleanUsername = data.username
+    validatedData.username = data.username
       .trim()
       .toLowerCase()
       .replace(/[^a-zA-Z0-9 -]/g, '')
       .replaceAll(' ', '-');
-    await this.isExistsEmailOrUsername(validatedData.email, cleanUsername);
-    data.username = cleanUsername; 
+    
+    await this.isExistingUserData(validatedData.email, validatedData.username);
 
-    // TODO: validatePass(pass) > Pass+Salt > Hash > Save
-    data.password = await this.hashPassword(data.password);
+    // TODO: Add password validation before hashing (8chars,SpecialChars,...)
+    validatedData.password = await hashPassword(data.password);
     
     validatedData.createdAt = new Date();
     validatedData.modifiedAt = new Date();
@@ -85,8 +84,9 @@ export class UsersService {
     return validatedData;
   } 
 
-  // We check for both here, to only do one db call instead of two
-  private async isExistsEmailOrUsername(email: string, username: string): Promise<void> {
+  /** We check if both 'Email' and 'Username' are already in use, 
+   *  with a single database call, instead of two */
+  private async isExistingUserData(email: string, username: string): Promise<void> {
     const userFound = await this.userModel
       .findOne()
       .or([ {email: email}, {username: username} ])
@@ -101,10 +101,5 @@ export class UsersService {
       }
       sendForbidden(resMessage + ' already in use.');
     }
-  }
-
-  // Bcrypt docs: https://github.com/kelektiv/node.bcrypt.js#readme
-  private async hashPassword(rawPassword: string): Promise<string> {
-    return await bcrypt.hash(rawPassword, 10);
   }
 }

@@ -1,5 +1,4 @@
 // Original Autors: https://github.com/manishsaraan/email-validator/blob/master/index.js
-
 const emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/
 
 export function isValidEmailFormat(email: string): boolean {

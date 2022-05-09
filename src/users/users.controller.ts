@@ -25,7 +25,6 @@ export class UsersController {
     })
     async registerNewUser(
         @Body() body: UserCreateDTO
-
     ): Promise<UserDTO> {
         const validatedBody = await this.usersService.validateCreateBodyData(body);
         const newUser = await this.usersService.insert(validatedBody);
