@@ -18,7 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     https://github.com/jaredhanson/passport-local */
   constructor(private authService: AuthService) {
     /** Overriding default local-strategy option (username) with 'email' */
-    super({ 
+    super({
       usernameField: 'email',
       passwordField: 'password'
     });

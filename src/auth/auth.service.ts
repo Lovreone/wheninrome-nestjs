@@ -21,18 +21,14 @@ export class AuthService {
         if (!isMatchingPass) {
             return null;
         }
-        const { password, ...result } = user;
-        return result;
+        return user;
     }
 
     async login(user: any) {
-        const payload = { email: user.email, sub: user.userId };
+        const payload = { email: user.email, sub: user.id };
         return {
             access_token: this.jwtService.sign(payload),
-            user: UserConverter.convertToDto({
-                ...user._doc, 
-                id: user._doc._id
-            })
+            user: UserConverter.convertToDto(user)
         }
     }
 }

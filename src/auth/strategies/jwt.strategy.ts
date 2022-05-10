@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  /* Passport builds user object based on validate() method return value, and attachex it as a property on the Request object.
+  /* Passport builds user object based on validate() method return value, and attaches it as a property on the Request object.
   This approach leaves us room to inject other business logic into the process, like doing a database lookup in validate() 
   to extract more user info, returning a more enriched user.
 
@@ -30,6 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   perform token revocation. The model implemented here is a fast, "stateless JWT" model, where each API call is immediately authorized 
   based on valid JWT presence, and a small bit of info about the requester (its userId and username) is available in our Request pipeline. */
   async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+    return { userId: payload.sub, email: payload.email };
   }
 }
