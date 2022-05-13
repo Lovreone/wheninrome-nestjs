@@ -3,7 +3,8 @@ import { CityConverter } from './city.converter';
 import { CityDTO } from './city.dto';
 import { CitiesService } from './cities.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { Controller, Get, Delete, HttpCode, Param, Patch, Body, Post } from '@nestjs/common';
+import { Controller, Get, Delete, HttpCode, Param, Patch, Body, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
 @ApiTags('Cities')
 @Controller('cities')
@@ -61,6 +62,7 @@ export class CitiesController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     @HttpCode(201)
     @ApiResponse({
         status: 201,
