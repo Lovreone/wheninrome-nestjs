@@ -1,13 +1,18 @@
-import { ApiTags } from '@nestjs/swagger';
-import { Controller, Request, UseGuards, Post, Get } from '@nestjs/common';
+import { Controller, Request, UseGuards, Post, Get, Body, HttpCode } from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { UsersService } from './users/users.service';
+import { UserConverter } from './users/user.converter';
+import { UserDTO } from './users/user.dto';
+import { UserCreateDTO } from './users/user-create.dto';
 
 @Controller()
 export class AppController {
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private usersService: UsersService
   ) {}
 
   @ApiTags('Auth')
@@ -27,5 +32,24 @@ export class AppController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @ApiTags('Auth')
+  @ApiBody({
+    type: UserCreateDTO
+  })
+  @ApiResponse({
+    status: 201,
+    type: UserDTO,
+    description: 'Returned the created User document'
+  })
+  @Post('auth/register')
+  @HttpCode(201)
+  async registerNewUser(
+      @Body() body: UserCreateDTO,
+  ): Promise<UserDTO> {
+      const validatedBody = await this.usersService.validateCreateBodyData(body);
+      const newUser = await this.usersService.insert(validatedBody);
+      return UserConverter.convertToDto(newUser);
   }
 }

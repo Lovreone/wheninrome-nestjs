@@ -13,6 +13,8 @@ export class UsersController {
         private usersService: UsersService
     ) {}
 
+    /* FIXME: This Registration endpoint is unused, curretly used from AppControler, remove later 
+        In this controller we will still do all the other user perations we need. */
     @Post()
     @HttpCode(201)
     @ApiResponse({

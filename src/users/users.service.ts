@@ -105,7 +105,7 @@ export class UsersService {
       if (userFound.username === username) {
         resMessage = resMessage.concat(`Username: '${username}' `);
       }
-      sendForbidden(resMessage + ' already in use.');
+      sendForbidden(resMessage + 'already in use.');
     }
   }
 }
