@@ -62,7 +62,7 @@ export class CitiesController {
     }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @HttpCode(201)
     @ApiResponse({
         status: 201,
