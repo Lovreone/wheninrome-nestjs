@@ -1,53 +1,71 @@
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-// Blueprint objects for Mongoose (uses JS types), id autogenereated
-export const LandmarkSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    introText: { type: String, required: true },
-    description: { type: String, required: false },
-    entranceFee: { type: Number, required: false },
-    officialWebsite: { type: String, required: false },
-    featuredImage: { type: String, required: false },
-    howToArrive: { type: String, required: false },
-    workingDays: { type: String, required: false },
-    workingHours: { type: String, required: false },
-    coordinates: { type: String, required: false },
-    city: { 
-        id: String, 
-        name: String,
-        slug: String,
-        isActive: Boolean, 
-        required: false 
-    },
-    isActive: { type: Boolean, required: true },
-    createdAt: { type: Date, required: false },
-    modifiedAt: { type: Date, required: false },
-});
+export type LandmarkDocument = Landmark & Document;
 
-// Entity Model (Database)
-export class Landmark extends mongoose.Document {
+@Schema()
+export class NestedCity {
+    @Prop({ type: String, required: false })
     id: string;
+
+    @Prop({ type: String, required: false })
     name: string;
+
+    @Prop({ type: String, required: false })
     slug: string;
-    introText: string;
-    description: string;
-    entranceFee: number;
-    officialWebsite: string;
-    featuredImage: string;
-    howToArrive: string;
-    workingDays: string;
-    workingHours: string;
-    coordinates: string;
-    city: NestedCity;
+
+    @Prop({ type: Boolean, required: false })
     isActive: boolean;
+}
+
+@Schema()
+export class Landmark {
+    id?: string;
+
+    @Prop({ type: String, required: true })
+    name: string;
+
+    @Prop({ type: String, required: true, unique: true })
+    slug: string;
+
+    @Prop({ type: String, required: true })
+    introText: string;
+
+    @Prop({ type: String, required: false })
+    description: string;
+
+    @Prop({ type: Number, required: false })
+    entranceFee: number;
+
+    @Prop({ type: String, required: false })
+    officialWebsite: string;
+
+    @Prop({ type: String, required: false })
+    featuredImage: string;
+
+    @Prop({ type: String, required: false })
+    howToArrive: string;
+
+    @Prop({ type: String, required: false })
+    workingDays: string;
+
+    @Prop({ type: String, required: false })
+    workingHours: string;
+    
+    @Prop({ type: String, required: false })
+    coordinates: string;
+
+    @Prop({ type: NestedCity, required: false, _id: false })
+    city: NestedCity;
+
+    @Prop({ type: Boolean, required: true })
+    isActive: boolean;
+
+    @Prop({ type: Date, required: false })
     createdAt: Date;
+
+    @Prop({ type: Date, required: false })
     modifiedAt: Date;
 }
 
-export interface NestedCity {
-    id: string;
-    name: string;
-    slug: string;
-    isActive: boolean;
-}
+export const LandmarkSchema = SchemaFactory.createForClass(Landmark);
