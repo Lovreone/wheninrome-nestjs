@@ -8,28 +8,28 @@ export type UserDocument = User & Document;
 export class User {
     id?: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ type: String, required: true, unique: true })
     username: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ type: String, required: true, unique: true })
     email: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     password: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     firstName: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     lastName: string;
 
-    @Prop({ required: true })
+    @Prop({ type: Boolean, required: true })
     isActive: boolean;
 
-    @Prop({ required: false })
+    @Prop({ type: Date, required: false })
     createdAt?: Date;
 
-    @Prop({ required: false })
+    @Prop({ type: Date, required: false })
     modifiedAt?: Date;
 
     @Prop({ type: [String], required: true })
@@ -37,12 +37,3 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-/* Useful docs:
-    https://docs.nestjs.com/techniques/mongodb
-    @Schema() config docs 
-        https://mongoosejs.com/docs/guide.html#options
-    @Prop() config docs 
-        https://mongoosejs.com/docs/schematypes.html
-        https://mongoosejs.com/docs/schematypes.html#schematype-options
-*/
