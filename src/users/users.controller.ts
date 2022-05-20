@@ -1,35 +1,67 @@
+import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import { UserConverter } from './user.converter';
-import { UserCreateDTO } from './user-create.dto';
-import { Controller, Post, HttpCode, Body } from '@nestjs/common';
+import { Controller, Request, HttpCode, Body, Get, Delete, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 
 import { UserDTO } from './user.dto';
 
-@ApiTags('Users')
 @Controller('users')
 export class UsersController {
     constructor(
         private usersService: UsersService
     ) {}
 
-    /* FIXME: This Registration endpoint is unused, curretly used from AppControler, remove later 
-        In this controller we will still do all the other user perations we need. */
+    /* Get user profile (User) 
+        TODO: Remove from Auth (AppControler), use from here
+    */
+    @ApiTags('Users (User)')
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    getProfile(@Request() req) {
+        return req.user;
+    }
+
+    /* TODO: Modify user profile data (User)
+        FirstName, lastName, 
+        userName(uniquecheck,formatcheck), 
+        email(uniquecheck,formatcheck) ***Security ***SendingEmails
+    */
+
+    /* Change user password (User)
+        TODO: TBD logic ***Security ***SendingEmails
+    */    
+
+    @ApiTags('Users (Admin)')
     @ApiResponse({
-        status: 201,
-        type: UserDTO,
-        description: 'Returned the created User document'
+        status: 200,
+        type: [UserDTO],
+        description: 'Returns the full list of User documents'
     })
-    @ApiBody({
-        type: UserCreateDTO
+    @Get()
+    async getUsers(): Promise<UserDTO[]> {
+        const users = await this.usersService.getAll();
+        return users.map(user => UserConverter.convertToDto(user)); 
+    }
+
+    /* TODO: Modify user{id} (Admin) 
+        FirstName, lastName, 
+        userName(uniquecheck,formatcheck), 
+        email(uniquecheck,formatcheck)
+        isActive
+    */
+
+    /* FIXME: Not to be used in production  */
+    @ApiTags('Users (Admin)')
+    @ApiResponse({
+        status: 204,
+        description: 'Deletes User document by ID'
     })
-    @HttpCode(201)
-    @Post()
-    async registerNewUser(
-        @Body() body: UserCreateDTO
-    ): Promise<UserDTO> {
-        const validatedBody = await this.usersService.validateCreateBodyData(body);
-        const newUser = await this.usersService.insert(validatedBody);
-        return UserConverter.convertToDto(newUser);
+    @HttpCode(204)
+    @Delete(':id')
+    async delete(
+        @Param('id') userId: string
+    ): Promise<void> {
+        await this.usersService.delete(userId);
     }
 }

@@ -27,9 +27,10 @@ export class AppController {
   /* When our GET /profile route is hit, the Guard will automatically 
   invoke our passport-jwt custom configured logic, validating the JWT, 
   and assigning the user property to the Request object. */ 
+  // TODO: Currently unused, using /users/profile instead. Remove later
   @ApiTags('Auth')
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('auth/me')
   getProfile(@Request() req) {
     return req.user;
   }
