@@ -1,14 +1,43 @@
+import { IsString, IsBoolean, IsNotEmpty, MinLength, MaxLength, IsEmail } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 import { Role } from 'src/helpers/enums';
 
-// FIXME: Rethink what we insert by user and what we generate
 export class UserCreateDTO {
+    @ApiProperty({description: 'User designated username (Unique)', minimum: 2, maximum: 20})
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(2)
+    @MaxLength(20)
     username: string;
+
+    @ApiProperty({description: 'User designated username (Unique)', minimum: 2, maximum: 20})
+    @IsNotEmpty()
+    @IsString()
+    @IsEmail()
     email: string;
+
+    @ApiProperty({description: 'User designated password', minimum: 8})
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(8)
     password: string;
+
+    @ApiProperty({description: 'First name of the User', minimum: 2, maximum: 20})
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(2)
+    @MaxLength(20)
     firstName: string;
+
+    @ApiProperty({description: 'Last name of the User', minimum: 2, maximum: 20})
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(2)
+    @MaxLength(20)
     lastName: string;
+
     isActive: boolean;
-    createdAt?: Date;
-    modifiedAt?: Date;
     roles: Role[];
+    createdAt: Date;
+    modifiedAt: Date;
 }
