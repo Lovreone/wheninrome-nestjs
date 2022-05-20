@@ -43,8 +43,8 @@ export class AppController {
     type: UserDTO,
     description: 'Returned the created User document'
   })
-  @Post('auth/register')
   @HttpCode(201)
+  @Post('auth/register')
   async registerNewUser(
       @Body() body: UserCreateDTO,
   ): Promise<UserDTO> {

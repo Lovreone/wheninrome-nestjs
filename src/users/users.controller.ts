@@ -15,8 +15,6 @@ export class UsersController {
 
     /* FIXME: This Registration endpoint is unused, curretly used from AppControler, remove later 
         In this controller we will still do all the other user perations we need. */
-    @Post()
-    @HttpCode(201)
     @ApiResponse({
         status: 201,
         type: UserDTO,
@@ -25,6 +23,8 @@ export class UsersController {
     @ApiBody({
         type: UserCreateDTO
     })
+    @HttpCode(201)
+    @Post()
     async registerNewUser(
         @Body() body: UserCreateDTO
     ): Promise<UserDTO> {

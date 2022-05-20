@@ -5,30 +5,31 @@ import { LandmarkDTO } from './landmark.dto';
 import { LandmarkCreateUpdateDTO } from './landmark-create-update.dto';
 import { LandmarkConverter } from './landmark.converter';
 
-@ApiTags('Landmarks')
 @Controller('landmarks')
 export class LandmarksController {
     constructor(
         private readonly landmarksService: LandmarksService
     ) {}
 
-    @Get()
+    @ApiTags('Landmarks (Admin)')
     @ApiResponse({
         status: 200,
         type: [LandmarkDTO],
         description: 'Returns the full list of Landmark documents'
     })
+    @Get()
     async getLandmarks(): Promise<LandmarkDTO[]> {
         const landmarks = await this.landmarksService.getAllLandmarks();
         return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
     }
 
-    @Get('by-city/:id')
+    @ApiTags('Landmarks (Public)')
     @ApiResponse({
         status: 200,
         type: [LandmarkDTO],
         description: 'Returns the full list of Landmark documents for selected city'
     })
+    @Get('by-city/:id')
     async getLandmarksByCity(
         @Param('id') cityId: string
     ): Promise<LandmarkDTO[]> {
@@ -36,12 +37,13 @@ export class LandmarksController {
         return landmarks.map(landmark => LandmarkConverter.convertToDto(landmark)); 
     }
 
-    @Get(':id')
+    @ApiTags('Landmarks (Admin)')
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
         description: 'Returns a single Landmark document document by ID'
     })
+    @Get(':id')
     async getLandmarkById(
         @Param('id') landmarkId: string
     ): Promise<LandmarkDTO> {
@@ -49,12 +51,13 @@ export class LandmarksController {
         return LandmarkConverter.convertToDto(landmark);
     }
 
-    @Get('by-slug/:slug')
+    @ApiTags('Landmarks (Public)')
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
         description: 'Returns a single Landmark document by slug'
     })
+    @Get('by-slug/:slug')
     async getLandmarkBySlug(
         @Param('slug') landmarkSlug: string
     ): Promise<LandmarkDTO> {
@@ -62,8 +65,7 @@ export class LandmarksController {
         return LandmarkConverter.convertToDto(landmark);
     }
 
-    @Post()
-    @HttpCode(201)
+    @ApiTags('Landmarks (Admin)')
     @ApiResponse({
         status: 201,
         type: LandmarkDTO,
@@ -72,6 +74,8 @@ export class LandmarksController {
     @ApiBody({
         type: LandmarkCreateUpdateDTO
     })
+    @HttpCode(201)
+    @Post()
     async createLandmark(
         @Body() body: LandmarkCreateUpdateDTO
     ): Promise<LandmarkDTO> {
@@ -80,7 +84,7 @@ export class LandmarksController {
         return LandmarkConverter.convertToDto(newLandmark);
     }
 
-    @Patch(':id')
+    @ApiTags('Landmarks (Admin)')
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
@@ -89,6 +93,7 @@ export class LandmarksController {
     @ApiBody({
         type: LandmarkCreateUpdateDTO
     })
+    @Patch(':id')
     async updateLandmark(
         @Param('id') landmarkId: string,
         @Body() body: LandmarkCreateUpdateDTO
@@ -98,12 +103,13 @@ export class LandmarksController {
         return LandmarkConverter.convertToDto(updatedLandmark);
     }
 
-    @Delete(':id')
-    @HttpCode(204)
+    @ApiTags('Landmarks (Admin)')
     @ApiResponse({
         status: 204,
         description: 'Deletes Landmark document by ID'
     })
+    @HttpCode(204)
+    @Delete(':id')
     async delete(
         @Param('id') landmarkId: string
     ): Promise<void> {

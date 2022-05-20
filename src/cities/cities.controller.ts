@@ -6,41 +6,44 @@ import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { Controller, Get, Delete, HttpCode, Param, Patch, Body, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
-@ApiTags('Cities')
+
 @Controller('cities')
 export class CitiesController {
     constructor(
         private citiesService: CitiesService
     ) {}
 
-    @Get()
+    @ApiTags('Cities (Admin)')
     @ApiResponse({
         status: 200,
         type: [CityDTO],
         description: 'Returns the full list of City documents'
     })
+    @Get()
     async getAllCities(): Promise<CityDTO[]> {
         const cities = await this.citiesService.getAll();
         return cities.map(city => CityConverter.convertToDto(city)); 
     }
 
-    @Get('active')
+    @ApiTags('Cities (Public)')
     @ApiResponse({
         status: 200,
         type: [CityDTO],
         description: 'Returns the list of active City documents'
     })
+    @Get('active')
     async getActiveCities(): Promise<CityDTO[]> {
         const cities = await this.citiesService.getAllActive();
         return cities.map(city => CityConverter.convertToDto(city)); 
     }
 
-    @Get(':id')
+    @ApiTags('Cities (Admin)')    
     @ApiResponse({
         status: 200,
         type: CityDTO,
         description: 'Returned a single City document document by ID'
     })
+    @Get(':id')
     async getCityById(
         @Param('id') cityId: string
     ): Promise<CityDTO> {
@@ -48,12 +51,13 @@ export class CitiesController {
         return CityConverter.convertToDto(city);
     }
 
-    @Get('by-slug/:slug')
+    @ApiTags('Cities (Public)')
     @ApiResponse({
         status: 200,
         type: CityDTO,
         description: 'Returned a single City document by slug'
     })
+    @Get('by-slug/:slug')
     async getCityBySlug(
         @Param('slug') citySlug: string
     ): Promise<CityDTO> {
@@ -61,9 +65,7 @@ export class CitiesController {
         return CityConverter.convertToDto(city);
     }
 
-    @Post()
-    // @UseGuards(JwtAuthGuard)
-    @HttpCode(201)
+    @ApiTags('Cities (Admin)')
     @ApiResponse({
         status: 201,
         type: CityDTO,
@@ -72,6 +74,9 @@ export class CitiesController {
     @ApiBody({
         type: CityCreateUpdateDTO
     })
+    // @UseGuards(JwtAuthGuard)
+    @HttpCode(201)
+    @Post()
     async createCity(
         @Body() body: CityCreateUpdateDTO
     ): Promise<CityDTO> {
@@ -80,7 +85,7 @@ export class CitiesController {
         return CityConverter.convertToDto(newCity);
     }
 
-    @Patch(':id')
+    @ApiTags('Cities (Admin)')
     @ApiResponse({
         status: 200,
         type: CityDTO,
@@ -89,6 +94,7 @@ export class CitiesController {
     @ApiBody({
         type: CityCreateUpdateDTO
     })
+    @Patch(':id')
     async updateCity(
         @Param('id') cityId: string,
         @Body() body: CityCreateUpdateDTO
@@ -98,12 +104,13 @@ export class CitiesController {
         return CityConverter.convertToDto(updatedCity);
     }
 
-    @Delete(':id')
-    @HttpCode(204)
+    @ApiTags('Cities (Admin)')
     @ApiResponse({
         status: 204,
         description: 'Deleted City document by ID'
     })
+    @HttpCode(204)
+    @Delete(':id')
     async deleteCity(
         @Param('id') cityId: string
     ): Promise<void> {
