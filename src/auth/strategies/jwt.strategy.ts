@@ -31,14 +31,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   perform token revocation. The model implemented here is a fast, "stateless JWT" model, where each API call is immediately authorized 
   based on valid JWT presence, and a small bit of info about the requester (its userId and username) is available in our Request pipeline. */
   async validate(payload: any) {
-    // TODO: Decide whether we need 'issuedAt' and 'expiresAt' or remove
     const enrichedUser = await this.usersService.getSingleById(payload.sub);
     return { 
       userId: payload.sub, 
-      email: payload.email, 
-      issuedAt: payload.iat, 
-      expiresAt: payload.exp, 
-      roles: enrichedUser.roles // IMPORTANT: Has to be passed for RolesGuard to check!
+      email: payload.email,
+      roles: enrichedUser.roles, // Required for RolesGuard check
+      firstName: enrichedUser.firstName,
+      lastName: enrichedUser.lastName,
     };
   }
 }
