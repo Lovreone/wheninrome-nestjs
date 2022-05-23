@@ -1,10 +1,13 @@
-import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
-import { UserConverter } from './user.converter';
 import { Controller, Request, HttpCode, Body, Get, Delete, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { UsersService } from './users.service';
+import { ApiTags, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+import { RolesGuard } from './../auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
+import { UsersService } from './users.service';
+import { UserConverter } from './user.converter';
 import { UserDTO } from './user.dto';
+import { Role } from 'src/helpers/enums';
 
 @Controller('users')
 export class UsersController {
@@ -16,7 +19,9 @@ export class UsersController {
         TODO: Remove from Auth (AppControler), use from here
     */
     @ApiTags('Users (User)')
-    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;

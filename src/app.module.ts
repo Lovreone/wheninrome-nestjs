@@ -23,10 +23,6 @@ import { CitiesModule } from './cities/cities.module';
   ],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD, // global roles guard
-      useClass: RolesGuard,
-    },
   ],
 })
 export class AppModule {}

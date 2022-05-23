@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtConstants } from '../constants';
+import { UsersService } from './../../users/users.service';
 
 // TODO: Cleanup comments when finished
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private usersService: UsersService) {
     /* Config opts available https://github.com/mikenicholson/passport-jwt#configure-strategy */
     super({
       /* jwtFromRequest: supplies the method by which the JWT will be extracted from the Request. 
@@ -31,6 +32,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   based on valid JWT presence, and a small bit of info about the requester (its userId and username) is available in our Request pipeline. */
   async validate(payload: any) {
     // TODO: Decide whether we need 'issuedAt' and 'expiresAt' or remove
-    return { userId: payload.sub, email: payload.email, issuedAt: payload.iat, expiresAt: payload.exp };
+    const enrichedUser = await this.usersService.getSingleById(payload.sub);
+    return { 
+      userId: payload.sub, 
+      email: payload.email, 
+      issuedAt: payload.iat, 
+      expiresAt: payload.exp, 
+      roles: enrichedUser.roles // IMPORTANT: Has to be passed for RolesGuard to check!
+    };
   }
 }
