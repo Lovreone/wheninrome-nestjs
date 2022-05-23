@@ -5,13 +5,16 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+export const PORT = process.env.PORT || 3000;
+export const swaggerRoute = 'api-docs';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Validation init for class-validator (requires class-transformer)
   app.useGlobalPipes(new ValidationPipe());
 
-  // To allow client app to communicate on localhost
+  // Allows client app to communicate on localhost
   app.enableCors({origin: Config.origin});
 
   // Swagger docs init
@@ -23,10 +26,10 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(Config.swaggerRoute, app, document); 
+  SwaggerModule.setup(swaggerRoute, app, document); 
 
-  await app.listen(3000);
+  await app.listen(PORT);
 
-  console.info(`Application is running on: ${await app.getUrl()}`);
+  console.info(`Application running on: ${await app.getUrl()}`);
 }
 bootstrap();

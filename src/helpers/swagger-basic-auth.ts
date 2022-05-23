@@ -1,9 +1,9 @@
+import { swaggerRoute } from './../main';
 import { NextFunction, Request, Response } from 'express';
-import { Config } from './../../config/config';
 
 /** Protects Swagger UI with a basic http auth (username/password) */
 export const swaggerBasicAuth = (req: Request, res: Response, next: NextFunction): void => {
-  if (req.path !== `/${Config.swaggerRoute}/`) {
+  if (req.path !== `/${swaggerRoute}/`) {
     next();
     return;
   }
