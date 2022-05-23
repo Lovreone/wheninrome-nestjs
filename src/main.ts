@@ -1,3 +1,4 @@
+import { swaggerBasicAuth } from './helpers/swagger-basic-auth';
 import { Config } from './../config/config';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -14,13 +15,14 @@ async function bootstrap() {
   app.enableCors({origin: Config.origin});
 
   // Swagger docs init
+  app.use(swaggerBasicAuth);
   const config = new DocumentBuilder()
     .setTitle('When-in-Rome NestJS')
     .setDescription('API Documentation for When-in-Rome application web services')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api-docs', app, document); 
+  SwaggerModule.setup(Config.swaggerRoute, app, document); 
 
   await app.listen(3000);
 
