@@ -7,7 +7,7 @@ import { User, UserDocument } from './user.model';
 import { UserUpdateDTO } from './user-update.dto';
 import { UserCreateDTO } from './user-create.dto';
 import { isValidEmailFormat } from 'src/helpers/email-validator';
-import { hashPassword } from 'src/utils/bcrypt';
+import { hashPassword } from 'src/auth/utils/bcrypt';
 
 @Injectable()
 export class UsersService {
