@@ -20,6 +20,7 @@ async function bootstrap() {
     .setTitle('When-in-Rome NestJS')
     .setDescription('API Documentation for When-in-Rome application web services')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(Config.swaggerRoute, app, document); 
