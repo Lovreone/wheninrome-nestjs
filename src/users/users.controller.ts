@@ -21,7 +21,7 @@ export class UsersController {
     @ApiTags('Users (User)')
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
+    @Roles(Role.User, Role.Admin)
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;
@@ -38,11 +38,14 @@ export class UsersController {
     */    
 
     @ApiTags('Users (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: [UserDTO],
         description: 'Returns the full list of User documents'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get()
     async getUsers(): Promise<UserDTO[]> {
         const users = await this.usersService.getAll();
@@ -58,10 +61,13 @@ export class UsersController {
 
     /* FIXME: Not to be used in production  */
     @ApiTags('Users (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 204,
         description: 'Deletes User document by ID'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @HttpCode(204)
     @Delete(':id')
     async delete(
