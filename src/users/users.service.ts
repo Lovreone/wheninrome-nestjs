@@ -90,6 +90,31 @@ export class UsersService {
     return validatedData;
   } 
 
+  /* FIXME: For now we expect to have 3 separate body validations (Register, AdminModify, UserModify),
+   so all 3 validations can be refactored and merged into one in the future */
+   async validateUpdateBodyData(data: UserUpdateDTO): Promise<UserUpdateDTO> {
+    const validatedData = data;
+
+    if (!isValidEmailFormat(validatedData.email)) {
+      const resMessage = `Invalid email format for: '${validatedData.email}'.`
+      console.info(resMessage)
+      sendForbidden(resMessage);
+    }
+
+    validatedData.username = data.username
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9 -]/g, '')
+      .replaceAll(' ', '-');
+    
+    await this.isExistingUserData(validatedData.email, validatedData.username);
+
+    validatedData.modifiedAt = new Date();
+    validatedData.isActive = data.isActive;
+
+    return validatedData;
+  } 
+
   /** We check if both 'Email' and 'Username' are already in use, 
    *  with a single database call, instead of two */
   private async isExistingUserData(email: string, username: string): Promise<void> {

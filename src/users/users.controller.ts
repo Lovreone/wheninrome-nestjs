@@ -1,4 +1,4 @@
-import { Controller, Request, HttpCode, Body, Get, Delete, Param, UseGuards } from '@nestjs/common';
+import { Controller, Request, HttpCode, Body, Get, Delete, Param, UseGuards, Patch } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import { RolesGuard } from './../auth/guards/roles.guard';
@@ -7,6 +7,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UsersService } from './users.service';
 import { UserConverter } from './user.converter';
 import { UserDTO } from './user.dto';
+import { UserUpdateDTO } from './user-update.dto';
 import { Role } from 'src/helpers/enums';
 
 @Controller('users')
@@ -25,23 +26,6 @@ export class UsersController {
     @Get('profile')
     getProfile(@Request() req) {
         return req.user;
-    }
-
-    @ApiTags('Users (Admin)')
-    @ApiBearerAuth()
-    @ApiResponse({
-        status: 200,
-        type: UserDTO,
-        description: 'Returned a single User document document by ID'
-    })
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @Get(':id')
-    async getUserById(
-        @Param('id') userId: string
-    ): Promise<UserDTO> {
-        const user = await this.usersService.getSingleById(userId);
-        return UserConverter.convertToDto(user);
     }
 
     /* TODO: Modify user profile data (User)
@@ -69,12 +53,44 @@ export class UsersController {
         return users.map(user => UserConverter.convertToDto(user)); 
     }
 
-    /* TODO: Modify user{id} (Admin) 
-        FirstName, lastName, 
-        userName(uniquecheck,formatcheck), 
-        email(uniquecheck,formatcheck)
-        isActive
-    */
+    @ApiTags('Users (Admin)')
+    @ApiBearerAuth()
+    @ApiResponse({
+        status: 200,
+        type: UserDTO,
+        description: 'Returned a single User document document by ID'
+    })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Get(':id')
+    async getUserById(
+        @Param('id') userId: string
+    ): Promise<UserDTO> {
+        const user = await this.usersService.getSingleById(userId);
+        return UserConverter.convertToDto(user);
+    }
+
+    @ApiTags('Users (Admin)')
+    @ApiBearerAuth()
+    @ApiResponse({
+        status: 200,
+        type: UserDTO,
+        description: 'Returned the updated User document'
+    })
+    @ApiBody({
+        type: UserUpdateDTO
+    })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Patch(':id')
+    async updateUser(
+        @Param('id') userId: string,
+        @Body() body: UserUpdateDTO
+    ): Promise<UserDTO> {
+        const validatedBody = await this.usersService.validateUpdateBodyData(body);
+        const updatedUser = await this.usersService.update(userId, validatedBody);
+        return UserConverter.convertToDto(updatedUser);
+    }
 
     /* FIXME: Not to be used in production  */
     @ApiTags('Users (Admin)')
