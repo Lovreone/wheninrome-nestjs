@@ -27,6 +27,23 @@ export class UsersController {
         return req.user;
     }
 
+    @ApiTags('Users (Admin)')
+    @ApiBearerAuth()
+    @ApiResponse({
+        status: 200,
+        type: UserDTO,
+        description: 'Returned a single User document document by ID'
+    })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Get(':id')
+    async getUserById(
+        @Param('id') userId: string
+    ): Promise<UserDTO> {
+        const user = await this.usersService.getSingleById(userId);
+        return UserConverter.convertToDto(user);
+    }
+
     /* TODO: Modify user profile data (User)
         FirstName, lastName, 
         userName(uniquecheck,formatcheck), 
