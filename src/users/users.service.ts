@@ -62,75 +62,69 @@ export class UsersService {
         .exec();
   }
 
+  /** User submits data during Registration */ 
   async validateCreateBodyData(data: UserCreateDTO): Promise<UserCreateDTO> {
     const validatedData = data;
-
-    if (!isValidEmailFormat(validatedData.email)) {
-      const resMessage = `Invalid email format for: '${validatedData.email}'.`
-      console.info(resMessage)
-      sendForbidden(resMessage);
-    }
-
-    validatedData.username = data.username
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9 -]/g, '')
-      .replaceAll(' ', '-');
-    
-    await this.isExistingUserData(validatedData.email, validatedData.username);
-
-    // TODO: Add password validation before hashing (8chars,SpecialChars,...)
+    validatedData.email = await this.validateEmail(validatedData);
+    validatedData.username = await this.validateUsername(validatedData);
+    // TODO: Add password validation before hashing (SpecialChars,...)
     validatedData.password = await hashPassword(data.password);
-    
     validatedData.createdAt = new Date();
     validatedData.modifiedAt = new Date();
     validatedData.isActive = true;
     validatedData.roles = [Role.User];
-
     return validatedData;
   } 
 
-  /* FIXME: For now we expect to have 3 separate body validations (Register, AdminModify, UserModify),
-   so all 3 validations can be refactored and merged into one in the future */
-   async validateUpdateBodyData(data: UserUpdateDTO): Promise<UserUpdateDTO> {
+  /** Admin modifies user data in CMS */ 
+  async validateUpdateBodyData(data: UserUpdateDTO): Promise<UserUpdateDTO> {
     const validatedData = data;
+    validatedData.email = await this.validateEmail(validatedData);
+    validatedData.username = await this.validateUsername(validatedData);
+    validatedData.modifiedAt = new Date();
+    return validatedData;
+  } 
 
-    if (!isValidEmailFormat(validatedData.email)) {
-      const resMessage = `Invalid email format for: '${validatedData.email}'.`
-      console.info(resMessage)
+  private async validateEmail(data: UserCreateDTO | UserUpdateDTO): Promise<string> {
+    /* Check format: Executes after @Email() decorator to cover any edge cases */
+    if (!isValidEmailFormat(data.email)) {
+      const resMessage = `Invalid email format for: '${data.email}'.`
       sendForbidden(resMessage);
     }
+    /* Unique check: Check if already in use on existing user */
+    const userFound = await this.userModel.findOne({email: data.email}).exec();
+    if (userFound) {
+      /* Check that userFound is not the User we're currently editing */
+      const isUpdateOperation = data.hasOwnProperty('id');
+      if (isUpdateOperation && data['id'] === userFound['id']) {
+        return data.email;
+      }
+      const resMessage = `Email '${data.email}' is already in use.`
+      sendForbidden(resMessage);
+    } else {
+      return data.email;
+    }
+  }
 
-    validatedData.username = data.username
+  private async validateUsername(data: UserCreateDTO | UserUpdateDTO): Promise<string> {
+    /* Format data: Format username string to the form we need */
+    data.username = data.username
       .trim()
       .toLowerCase()
       .replace(/[^a-zA-Z0-9 -]/g, '')
       .replaceAll(' ', '-');
-    
-    await this.isExistingUserData(validatedData.email, validatedData.username);
-
-    validatedData.modifiedAt = new Date();
-    validatedData.isActive = data.isActive;
-
-    return validatedData;
-  } 
-
-  /** We check if both 'Email' and 'Username' are already in use, 
-   *  with a single database call, instead of two */
-  private async isExistingUserData(email: string, username: string): Promise<void> {
-    const userFound = await this.userModel
-      .findOne()
-      .or([ {email: email}, {username: username} ])
-      .exec();
+    /* Unique check: Check if already in use on existing user */
+    const userFound = await this.userModel.findOne({username: data.username}).exec();
     if (userFound) {
-      let resMessage = '';
-      if (userFound.email === email) {
-        resMessage = resMessage.concat(`Email: '${email}' `);
+      /* Check that userFound is not the User we're currently editing */
+      const isUpdateOperation = data.hasOwnProperty('id');
+      if (isUpdateOperation && data['id'] === userFound['id']) {
+        return data.username;
       }
-      if (userFound.username === username) {
-        resMessage = resMessage.concat(`Username: '${username}' `);
-      }
-      sendForbidden(resMessage + 'already in use.');
+      const resMessage = `Username '${data.username}' is already in use.`
+      sendForbidden(resMessage);
+    } else {
+      return data.username;
     }
   }
 }
