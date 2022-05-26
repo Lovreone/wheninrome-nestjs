@@ -5,28 +5,28 @@ export class UserDTO {
     @ApiProperty()
     public id: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'User designated username (Unique)', minimum: 2, maximum: 20})
     public username: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'User designated email (Unique)'})
     public email: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'First name of the User', minimum: 2, maximum: 20})
     public firstName: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Last name of the User', minimum: 2, maximum: 20})
     public lastName: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Flag determining whether User account is active or not'})
     public isActive: boolean;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Date of User profile creation'})
     public createdAt: Date;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Date of latest User profile update'})
     public modifiedAt: Date;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Permissions level of the User', enum: ['admin', 'user']})
     public roles: Role[];
 
     constructor(
