@@ -33,7 +33,7 @@ export class AppController {
       const newUser = await this.usersService.insert(validatedBody);
       return UserConverter.convertToDto(newUser);
   }
-  
+
   @ApiTags('Auth')
   @UseGuards(LocalAuthGuard) // The route handler will only be invoked if the user has been validated
   @Post('auth/login')

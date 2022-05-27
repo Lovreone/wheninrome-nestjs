@@ -10,8 +10,6 @@ import { CityCreateUpdateDTO } from './city-create-update.dto';
 import { CityConverter } from './city.converter';
 import { CityDTO } from './city.dto';
 
-
-
 @Controller('cities')
 export class CitiesController {
     constructor(
