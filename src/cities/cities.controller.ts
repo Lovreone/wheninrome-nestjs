@@ -1,10 +1,15 @@
+import { Controller, Get, Delete, HttpCode, Param, Patch, Body, Post, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+import { RolesGuard } from './../auth/guards/roles.guard';
+import { Roles } from './../auth/decorators/roles.decorator';
+import { Role } from 'src/helpers/enums';
+
+import { CitiesService } from './cities.service';
 import { CityCreateUpdateDTO } from './city-create-update.dto';
 import { CityConverter } from './city.converter';
 import { CityDTO } from './city.dto';
-import { CitiesService } from './cities.service';
-import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { Controller, Get, Delete, HttpCode, Param, Patch, Body, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+
 
 
 @Controller('cities')
@@ -14,11 +19,14 @@ export class CitiesController {
     ) {}
 
     @ApiTags('Cities (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: [CityDTO],
         description: 'Returns the full list of City documents'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get()
     async getAllCities(): Promise<CityDTO[]> {
         const cities = await this.citiesService.getAll();
@@ -38,11 +46,14 @@ export class CitiesController {
     }
 
     @ApiTags('Cities (Admin)')    
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: CityDTO,
         description: 'Returned a single City document document by ID'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get(':id')
     async getCityById(
         @Param('id') cityId: string
@@ -66,6 +77,7 @@ export class CitiesController {
     }
 
     @ApiTags('Cities (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 201,
         type: CityDTO,
@@ -74,7 +86,8 @@ export class CitiesController {
     @ApiBody({
         type: CityCreateUpdateDTO
     })
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @HttpCode(201)
     @Post()
     async createCity(
@@ -86,6 +99,7 @@ export class CitiesController {
     }
 
     @ApiTags('Cities (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: CityDTO,
@@ -94,6 +108,8 @@ export class CitiesController {
     @ApiBody({
         type: CityCreateUpdateDTO
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Patch(':id')
     async updateCity(
         @Param('id') cityId: string,
@@ -105,10 +121,13 @@ export class CitiesController {
     }
 
     @ApiTags('Cities (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 204,
         description: 'Deleted City document by ID'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @HttpCode(204)
     @Delete(':id')
     async deleteCity(
