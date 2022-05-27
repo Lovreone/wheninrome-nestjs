@@ -1,5 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+import { RolesGuard } from './../auth/guards/roles.guard';
+import { Role } from 'src/helpers/enums';
+import { Roles } from './../auth/decorators/roles.decorator';
+
 import { LandmarksService } from './landmarks.service';
 import { LandmarkDTO } from './landmark.dto';
 import { LandmarkCreateUpdateDTO } from './landmark-create-update.dto';
@@ -12,11 +17,14 @@ export class LandmarksController {
     ) {}
 
     @ApiTags('Landmarks (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: [LandmarkDTO],
         description: 'Returns the full list of Landmark documents'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get()
     async getLandmarks(): Promise<LandmarkDTO[]> {
         const landmarks = await this.landmarksService.getAllLandmarks();
@@ -38,11 +46,14 @@ export class LandmarksController {
     }
 
     @ApiTags('Landmarks (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
         description: 'Returns a single Landmark document document by ID'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Get(':id')
     async getLandmarkById(
         @Param('id') landmarkId: string
@@ -66,6 +77,7 @@ export class LandmarksController {
     }
 
     @ApiTags('Landmarks (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 201,
         type: LandmarkDTO,
@@ -74,6 +86,8 @@ export class LandmarksController {
     @ApiBody({
         type: LandmarkCreateUpdateDTO
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @HttpCode(201)
     @Post()
     async createLandmark(
@@ -85,6 +99,7 @@ export class LandmarksController {
     }
 
     @ApiTags('Landmarks (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: LandmarkDTO,
@@ -93,6 +108,8 @@ export class LandmarksController {
     @ApiBody({
         type: LandmarkCreateUpdateDTO
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Patch(':id')
     async updateLandmark(
         @Param('id') landmarkId: string,
@@ -104,10 +121,13 @@ export class LandmarksController {
     }
 
     @ApiTags('Landmarks (Admin)')
+    @ApiBearerAuth()
     @ApiResponse({
         status: 204,
         description: 'Deletes Landmark document by ID'
     })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @HttpCode(204)
     @Delete(':id')
     async delete(
