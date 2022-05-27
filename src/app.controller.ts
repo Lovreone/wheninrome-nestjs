@@ -16,6 +16,25 @@ export class AppController {
   ) {}
 
   @ApiTags('Auth')
+  @ApiBody({
+    type: UserCreateDTO
+  })
+  @ApiResponse({
+    status: 201,
+    type: UserDTO,
+    description: 'Returned the created User document'
+  })
+  @HttpCode(201)
+  @Post('auth/register')
+  async registerNewUser(
+      @Body() body: UserCreateDTO,
+  ): Promise<UserDTO> {
+      const validatedBody = await this.usersService.validateCreateBodyData(body);
+      const newUser = await this.usersService.insert(validatedBody);
+      return UserConverter.convertToDto(newUser);
+  }
+  
+  @ApiTags('Auth')
   @UseGuards(LocalAuthGuard) // The route handler will only be invoked if the user has been validated
   @Post('auth/login')
   async login(@Request() req) {
@@ -34,24 +53,5 @@ export class AppController {
   @Get('auth/me')
   getProfile(@Request() req) {
     return req.user;
-  }
-
-  @ApiTags('Auth')
-  @ApiBody({
-    type: UserCreateDTO
-  })
-  @ApiResponse({
-    status: 201,
-    type: UserDTO,
-    description: 'Returned the created User document'
-  })
-  @HttpCode(201)
-  @Post('auth/register')
-  async registerNewUser(
-      @Body() body: UserCreateDTO,
-  ): Promise<UserDTO> {
-      const validatedBody = await this.usersService.validateCreateBodyData(body);
-      const newUser = await this.usersService.insert(validatedBody);
-      return UserConverter.convertToDto(newUser);
   }
 }
