@@ -1,5 +1,5 @@
 import { Controller, Request, UseGuards, Post, Get, Body, HttpCode } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
@@ -29,6 +29,7 @@ export class AppController {
   and assigning the user property to the Request object. */ 
   // TODO: Currently unused, using /users/profile instead. Remove later
   @ApiTags('Auth')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('auth/me')
   getProfile(@Request() req) {
