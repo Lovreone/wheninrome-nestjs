@@ -11,8 +11,7 @@ export enum LandmarkType {
     // TODO: This should be created/managed by admin instead of hardcoding
 }
 
-// TODO: Rethink if we want to store roles within a database
 export enum Role {
-    User = 'user',
-    Admin = 'admin',
+    User = 'ROLE_USER',
+    Admin = 'PONTIFEX_MAXIMVS',
 }
