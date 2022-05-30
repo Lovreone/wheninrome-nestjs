@@ -18,7 +18,7 @@ export class AppController {
     private usersService: UsersService
   ) {}
 
-  @ApiTags('Auth')
+  @ApiTags('Authentification')
   @ApiBody({
     type: UserCreateDTO
   })
@@ -37,7 +37,7 @@ export class AppController {
       return UserConverter.convertToDto(newUser);
   }
 
-  @ApiTags('Auth')
+  @ApiTags('Authentification')
   @UseGuards(LocalAuthGuard) // The route handler will only be invoked if the user has been validated
   @Post('auth/login')
   async login(@Request() req) {
@@ -50,7 +50,7 @@ export class AppController {
   invoke our passport-jwt custom configured logic, validating the JWT, 
   and assigning the user property (can be enriched in jwt.strategy.ts) 
   to the Request object. */ 
-  @ApiTags('Auth')
+  @ApiTags('Authentification')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
