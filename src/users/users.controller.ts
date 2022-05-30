@@ -16,17 +16,9 @@ export class UsersController {
         private usersService: UsersService
     ) {}
 
-    /* Get user profile (User) 
-        TODO: Remove from Auth (AppControler), use from here
+    /* TODO: Get user profile data (User) 
+        All data available for he user to see
     */
-    @ApiTags('Users (User)')
-    @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.User, Role.Admin)
-    @Get('profile')
-    getProfile(@Request() req) {
-        return req.user;
-    }
 
     /* TODO: Modify user profile data (User)
         FirstName, lastName, 

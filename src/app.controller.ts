@@ -3,6 +3,9 @@ import { ApiTags, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
+import { Roles } from './auth/decorators/roles.decorator';
+import { Role } from 'src/helpers/enums';
 import { UsersService } from './users/users.service';
 import { UserConverter } from './users/user.converter';
 import { UserDTO } from './users/user.dto';
@@ -43,13 +46,14 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  /* When our GET /profile route is hit, the Guard will automatically 
+  /* When this route is hit, the Guard will automatically 
   invoke our passport-jwt custom configured logic, validating the JWT, 
-  and assigning the user property to the Request object. */ 
-  // TODO: Currently unused, using /users/profile instead. Remove later
+  and assigning the user property (can be enriched in jwt.strategy.ts) 
+  to the Request object. */ 
   @ApiTags('Auth')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
   @Get('auth/me')
   getProfile(@Request() req) {
     return req.user;
