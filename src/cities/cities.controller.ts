@@ -48,7 +48,7 @@ export class CitiesController {
     @ApiResponse({
         status: 200,
         type: CityDTO,
-        description: 'Returned a single City document document by ID'
+        description: 'Returned a single City document by ID'
     })
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)

@@ -16,10 +16,6 @@ export class UsersController {
         private usersService: UsersService
     ) {}
 
-    /* TODO: Get user profile data (User) 
-        All data available for he user to see
-    */
-
     /* TODO: Modify user profile data (User)
         FirstName, lastName, 
         userName(uniquecheck,formatcheck), 
@@ -45,15 +41,15 @@ export class UsersController {
         return users.map(user => UserConverter.convertToDto(user)); 
     }
 
-    @ApiTags('Users (Admin)')
+    @ApiTags('Users (User)')
     @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         type: UserDTO,
-        description: 'Returned a single User document document by ID'
+        description: 'Returned a single User document by ID'
     })
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
+    @Roles(Role.Admin, Role.User)
     @Get(':id')
     async getUserById(
         @Param('id') userId: string
