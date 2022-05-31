@@ -21,12 +21,12 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
     if (!user) {
-      throw new UnauthorizedException(`Login required in order to gain access!`);
+      throw new UnauthorizedException([`Login required in order to gain access!`]);
     }
   
     const isAuthorized = requiredRoles.some((role) => user.roles?.includes(role));
     if (!isAuthorized) {
-      throw new UnauthorizedException('User doesn\'t have the required access permissions!');
+      throw new UnauthorizedException(['User doesn\'t have the required access permissions!']);
     }
 
     return true;
