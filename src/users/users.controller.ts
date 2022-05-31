@@ -58,6 +58,28 @@ export class UsersController {
         return UserConverter.convertToDto(user);
     }
 
+    @ApiTags('Users (User)')
+    @ApiBearerAuth()
+    @ApiResponse({
+        status: 200,
+        type: UserDTO,
+        description: 'Returned the updated User document'
+    })
+    @ApiBody({
+        type: UserUpdateDTO
+    })
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.User)
+    @Patch('profile/:id')
+    async updateMyProfile(
+        @Param('id') userId: string,
+        @Body() body: UserUpdateDTO
+    ): Promise<UserDTO> {
+        const validatedBody = await this.usersService.validateUpdateBodyData(body);
+        const updatedUser = await this.usersService.update(userId, validatedBody);
+        return UserConverter.convertToDto(updatedUser);
+    }
+
     @ApiTags('Users (Admin)')
     @ApiBearerAuth()
     @ApiResponse({
@@ -71,7 +93,7 @@ export class UsersController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
     @Patch(':id')
-    async updateUser(
+    async updateUserData(
         @Param('id') userId: string,
         @Body() body: UserUpdateDTO
     ): Promise<UserDTO> {
