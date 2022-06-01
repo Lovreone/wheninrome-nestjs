@@ -10,6 +10,7 @@ import { UsersService } from './users/users.service';
 import { UserConverter } from './users/user.converter';
 import { UserDTO } from './users/user.dto';
 import { UserCreateDTO } from './users/user-create.dto';
+import { UserLoginDTO } from './users/user-login.dto';
 
 @Controller()
 export class AppController {
@@ -38,6 +39,20 @@ export class AppController {
   }
 
   @ApiTags('Authentification')
+  @ApiBody({
+    type: UserLoginDTO
+  })
+  @ApiResponse({
+    status: 201,
+    description: `Returns JWT access token, Token expiry and logged-in User object. Response object structure:\n
+      { 
+        access_token: string,
+        tokenExpiresAt: NumericDate,
+        tokenIssuedAt: NumericDate,
+        user: UserDTO
+      }
+    `
+  })
   @UseGuards(LocalAuthGuard) // The route handler will only be invoked if the user has been validated
   @Post('auth/login')
   async login(@Request() req) {
@@ -46,12 +61,24 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  /* When this route is hit, the Guard will automatically 
+  /** When this route is hit, the Guard will automatically 
   invoke our passport-jwt custom configured logic, validating the JWT, 
   and assigning the user property (can be enriched in jwt.strategy.ts) 
   to the Request object. */ 
   @ApiTags('Authentification')
   @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: `Requires JWT in header. Returns basic user info and logged-in User roles. Response object structure:\n
+      {
+        "userId": string,
+        "email": string,
+        "roles": string[],
+        "firstName": string,
+        "lastName": string
+      }
+    `
+  })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
   @Get('auth/me')

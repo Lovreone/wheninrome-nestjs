@@ -16,15 +16,13 @@ export class UsersController {
         private usersService: UsersService
     ) {}
 
-    /* TODO: Modify user profile data (User)
-        FirstName, lastName, 
-        userName(uniquecheck,formatcheck), 
+    /* TODO: Change user email (User)
         email(uniquecheck,formatcheck) ***Security ***SendingEmails
     */
 
-    /* Change user password (User)
-        TODO: TBD logic ***Security ***SendingEmails
-    */    
+    /* TODO: Change user password (User)
+        TBD logic ***Security ***SendingEmails
+    */
 
     @ApiTags('Users (Admin)')
     @ApiBearerAuth()
