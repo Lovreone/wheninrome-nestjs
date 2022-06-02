@@ -1,37 +1,37 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CityDTO {
-    @ApiProperty()
+    @ApiProperty({description: 'City item ID (Unique)'})
     public id: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Internationally recognized city name (English)'})
     public name: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'City \'pretty-url\' slug (Unique)'})
     public slug: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Parent Country of the City'})
     public country: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Featured image of the City'})
     public featuredImage: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Short introductory text of the city (Sub-title)'})
     public introText: string;
 
-    @ApiPropertyOptional()
-    public localCurrency: string
+    @ApiPropertyOptional({description: 'Local currency used in the city (i.e. EUR, USD, ...)'})
+    public localCurrency: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'A longer descriptive text used on City page'})
     public description: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Flag determining whether City is available to the Public or not'})
     public isActive: boolean;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Date of City item creation'})
     public createdAt: Date;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Date of latest City item update'})
     public modifiedAt: Date;
 
     constructor(

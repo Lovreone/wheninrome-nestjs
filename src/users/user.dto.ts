@@ -2,7 +2,7 @@ import { Role } from 'src/helpers/enums';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UserDTO {
-    @ApiProperty()
+    @ApiProperty({description: 'User item ID (Unique)'})
     public id: string;
 
     @ApiProperty({description: 'User designated username (Unique)', minimum: 2, maximum: 20})
