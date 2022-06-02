@@ -3,69 +3,72 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, MaxLength, IsNumber, MinLength, IsNotEmpty, Min, IsBoolean, IsUrl } from 'class-validator';
 
 export class LandmarkCreateUpdateDTO {
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({description: 'Internationally recognized Landmark name', minimum: 3, maximum: 20})
+    @IsNotEmpty({message: '\'$property\' field is required.'})
     @IsString()
     @MinLength(3)
     @MaxLength(20)
     name: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({description: 'Landmark \'pretty-url\' slug (Unique)', minimum: 3})
+    @IsNotEmpty({message: '\'$property\' field is required.'})
     @IsString()
     @MinLength(3)
     slug: string;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Short introductory text of the Landmark (Sub-title)', maximum: 50})
+    @IsNotEmpty({message: '\'$property\' field is required.'})
     @IsString()
+    @MaxLength(50)
     introText: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'A longer descriptive text used on Landmark page'})
     @IsOptional()
     @IsString()
     description: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Entrance fee for the Landmark (null-unknown; 0-free)'})
     @IsOptional()
     @IsNumber()
     @Min(0)
     entranceFee: number;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'URL to the official website of the Landmark'})
     @IsOptional()
     @IsUrl()
     officialWebsite: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Featured image of the Landmark'})
     @IsOptional()
     @IsString()
     featuredImage: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'A short descriptive text on how to get to the landmark'})
     @IsOptional()
     @IsString()
     howToArrive: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'A short descriptive text of working/non-working days'})
     @IsOptional()
     @IsString()
     workingDays: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'A short descriptive text of working/non-working hours'})
     @IsOptional()
     @IsString()
     workingHours: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({description: 'Coordinates pointing to the center of the landmark (i.e. 41.9061871712875, 12.475461122446518)'})
     @IsOptional()
     @IsString()
     coordinates: string;
 
-    @ApiPropertyOptional({ type: LandmarkCityDTO })
+    @ApiPropertyOptional({description: 'Nested City object, containing necessary parent city data for quick access', type: LandmarkCityDTO})
     @IsOptional()
     city: LandmarkCityDTO;
 
-    @ApiProperty()
+    @ApiProperty({description: 'Flag determining whether Landmark is available to the Public or not'})
+    @IsNotEmpty({message: '\'$property\' field is required.'})
     @IsBoolean()
     isActive: boolean;
 
