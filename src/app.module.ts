@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LandmarksModule } from './landmarks/landmarks.module';
 import { CitiesModule } from './cities/cities.module';
+import { ToursModule } from './tours/tours.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { CitiesModule } from './cities/cities.module';
     AuthModule,
     UsersModule,
     CitiesModule,
-    LandmarksModule
+    LandmarksModule,
+    ToursModule
   ],
   controllers: [
     AppController
