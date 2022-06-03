@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
 import { sendForbidden, sendNotFound } from 'src/helpers/helpers';
-import { Landmark } from './landmark.model';
+import { Landmark, LandmarkDocument } from './landmark.model';
 import { LandmarkCreateUpdateDTO } from './landmark-create-update.dto';
 import { LandmarkCityDTO } from './landmark-city.dto';
 
 @Injectable()
 export class LandmarksService {
     constructor(
-        @InjectModel('Landmark') private readonly landmarkModel: Model<Landmark>
+        @InjectModel(Landmark.name) private readonly landmarkModel: Model<LandmarkDocument>
     ) {}
 
     async getAllLandmarks(cityId?: string): Promise<Landmark[]> {

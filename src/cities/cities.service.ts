@@ -3,15 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { sendForbidden } from 'src/helpers/helpers';
-import { City } from './city.model';
+import { City, CityDocument } from './city.model';
 import { CityCreateUpdateDTO } from './city-create-update.dto';
 import { LandmarksService } from './../landmarks/landmarks.service';
-
 
 @Injectable()
 export class CitiesService {
     constructor(
-        @InjectModel('City') private readonly cityModel: Model<City>,
+        @InjectModel(City.name) private readonly cityModel: Model<CityDocument>,
         private landmarksService: LandmarksService
     ) {}
 

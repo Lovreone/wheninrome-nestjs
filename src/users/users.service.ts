@@ -13,7 +13,7 @@ import { hashPassword } from 'src/auth/utils/bcrypt';
 export class UsersService {
 
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
   ) {}
 
   async getSingleByUsername(username: string): Promise<User | undefined> {
