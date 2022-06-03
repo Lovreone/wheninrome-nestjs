@@ -14,14 +14,17 @@ export class CitiesService {
         private landmarksService: LandmarksService
     ) {}
 
+    /** Aimed exclusively towards CMS Admin users */
     async getAll(): Promise<City[]> {
         return await this.cityModel.find().exec();
     }
 
+    /** Aimed towards all Portal visitors */
     async getAllActive(): Promise<City[]> {
         return await this.cityModel.find({ isActive: true }).exec();
     }
 
+    /** Get by Id (with ugly url) is aimed towards CMS Admin users */
     async getSingleById(cityId: string): Promise<City> {
         return await this.cityModel
             .findById(cityId)
@@ -29,6 +32,7 @@ export class CitiesService {
             .exec();
     }
 
+    /** Get by slug (with pretty url) is aimed towards Portal visitors */
     async getSingleBySlug(citySlug: string): Promise<City> {
         return await this.cityModel
             .findOne({ slug: citySlug, isActive: true })
@@ -36,11 +40,13 @@ export class CitiesService {
             .exec();
     }
 
+    /** Insert aimed exclusively towards CMS Admin users */
     async insert(data: CityCreateUpdateDTO): Promise<City> {
         const newCity = new this.cityModel(data);
         return await newCity.save();
     }
 
+    /** Update aimed exclusively towards CMS Admin users */
     async update(cityId: string, data: CityCreateUpdateDTO): Promise<City> {
         return await this.cityModel
             .findOneAndUpdate({ _id: cityId }, data, { new: true })
@@ -48,6 +54,8 @@ export class CitiesService {
             .exec(); 
     }
 
+    //  TODO: TEMPORARY - Rethink all relations and deletion repercussions
+    /** Delete aimed exclusively towards CMS Admin users */
     async delete(cityId: string): Promise<void> {
         await this.cityModel
             .deleteOne({ _id: cityId })
@@ -55,6 +63,7 @@ export class CitiesService {
             .exec();
     }
 
+    /** Custom data-transformation/validation middleware */
     async validateBodyData(data: CityCreateUpdateDTO): Promise<CityCreateUpdateDTO> {
         const validatedData = data;
         const isUpdateOperation = validatedData.hasOwnProperty('id');

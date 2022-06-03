@@ -57,7 +57,7 @@ export class LandmarksService {
     }
 
     //  TODO: TEMPORARY - Rethink all relations and deletion repercussions
-    /** Update aimed exclusively towards CMS Admin users */
+    /** Delete aimed exclusively towards CMS Admin users */
     async delete(landmarkId: string): Promise<void> {
         await this.landmarkModel
             .deleteOne({ _id: landmarkId })
@@ -65,7 +65,7 @@ export class LandmarksService {
             .exec();
     }
 
-    /** Custom transformation/validation middleware  */
+    /** Custom data-transformation/validation middleware */
     async validateBodyData(data: LandmarkCreateUpdateDTO): Promise<LandmarkCreateUpdateDTO> {
         const validatedData = data;
         const isUpdateOperation = data.hasOwnProperty('id');
