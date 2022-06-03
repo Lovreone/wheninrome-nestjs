@@ -54,7 +54,7 @@ export class CitiesService {
             .exec(); 
     }
 
-    //  TODO: TEMPORARY - Rethink all relations and deletion repercussions
+    // TODO: TEMPORARY - Rethink all relations and deletion repercussions
     /** Delete aimed exclusively towards CMS Admin users */
     async delete(cityId: string): Promise<void> {
         await this.cityModel

@@ -16,26 +16,31 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>
   ) {}
 
+  /** Aimed to be used for Public user profiles in the future (TBD) */
   async getSingleByUsername(username: string): Promise<User | undefined> {
     return await this.userModel
       .findOne({ username: username })
       .exec();;
   }
 
+  /** Currently in use by Authorization system */
   async getSingleByEmail(email: string): Promise<User | undefined> {
     return await this.userModel
       .findOne({ email: email })
       .exec();;
   }
 
+  /** Aimed exclusively towards CMS Admin users */
   async getAll(): Promise<User[]> {
     return await this.userModel.find().exec();
   }
 
+  /** Aimed exclusively towards CMS Admin users (currently unused) */
   async getAllActive(): Promise<User[]> {
-      return await this.userModel.find({ isActive: true }).exec();
+    return await this.userModel.find({ isActive: true }).exec();
   }
 
+  /** Aimed exclusively towards CMS Admin users */
   async getSingleById(userId: string): Promise<User> {
     return await this.userModel
         .findById(userId)
@@ -43,18 +48,22 @@ export class UsersService {
         .exec();
   }
 
+  /** User Registration - Aimed towards Portal visitors */
   async insert(data: UserCreateDTO): Promise<User> {
     const newUser = new this.userModel(data);
     return await newUser.save();
   }
 
+  /** User Registration - Aimed towards Portal visitors */
   async update(userId: string, data: UserUpdateDTO): Promise<User> {
     return await this.userModel
-        .findOneAndUpdate({ _id: userId }, data, { new: true })
-        .orFail(() => { throw new NotFoundException('User not found.') })
-        .exec(); 
+      .findOneAndUpdate({ _id: userId }, data, { new: true })
+      .orFail(() => { throw new NotFoundException('User not found.') })
+      .exec(); 
   }
 
+  // TODO: TEMPORARY - Rethink all relations and deletion repercussions
+  /** Delete aimed exclusively towards CMS Admin users */
   async delete(userId: string): Promise<void> {
     await this.userModel
         .deleteOne({ _id: userId })
@@ -62,7 +71,7 @@ export class UsersService {
         .exec();
   }
 
-  /** User submits data during Registration */ 
+  /** Custom data-transformation/validation middleware for User Registration */
   async validateCreateBodyData(data: UserCreateDTO): Promise<UserCreateDTO> {
     const validatedData = data;
     validatedData.email = await this.validateEmail(validatedData);
@@ -76,7 +85,9 @@ export class UsersService {
     return validatedData;
   } 
 
-  /** Admin modifies user data in CMS */ 
+  /** Custom data-transformation/validation middleware for User modify
+   * - Admin modifies user data in CMS 
+   * - User modifies it's own profile */ 
   async validateUpdateBodyData(data: UserUpdateDTO): Promise<UserUpdateDTO> {
     const validatedData = data;
     validatedData.email = await this.validateEmail(validatedData);
@@ -85,6 +96,7 @@ export class UsersService {
     return validatedData;
   } 
 
+  /** Checks email format, and if  email is already in use */
   private async validateEmail(data: UserCreateDTO | UserUpdateDTO): Promise<string> {
     /* Check format: Executes after @Email() decorator to cover any edge cases */
     if (!isValidEmailFormat(data.email)) {
@@ -106,6 +118,7 @@ export class UsersService {
     }
   }
 
+  /** Transforms username to required form, checks if it is already in use */
   private async validateUsername(data: UserCreateDTO | UserUpdateDTO): Promise<string> {
     /* Format data: Format username string to the form we need */
     data.username = data.username
