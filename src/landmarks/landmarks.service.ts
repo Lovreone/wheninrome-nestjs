@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
-import { sendForbidden, sendNotFound } from 'src/helpers/helpers';
+import { sendForbidden } from 'src/helpers/helpers';
 import { Landmark, LandmarkDocument } from './landmark.model';
 import { LandmarkCreateUpdateDTO } from './landmark-create-update.dto';
 import { LandmarkCityDTO } from './landmark-city.dto';
@@ -13,55 +13,59 @@ export class LandmarksService {
         @InjectModel(Landmark.name) private readonly landmarkModel: Model<LandmarkDocument>
     ) {}
 
+    /** If provided with cityId param, it will return only the list 
+     * of Landmarks from that City which are publically available */
     async getAllLandmarks(cityId?: string): Promise<Landmark[]> {
         return cityId ? 
             await this.landmarkModel.find({ 'city.id': cityId, isActive: true }).exec() :
             await this.landmarkModel.find().exec();
     }
 
+    /** Get by Id (with ugly url) is aimed towards CMS Admin users */
     async getSingleById(landmarkId: string): Promise<Landmark> {
-        try {
-            return await this.landmarkModel.findById(landmarkId).orFail();
-        } catch (error) {
-            sendNotFound('Landmark not found.');
-        }  
+        return await this.landmarkModel
+            .findById(landmarkId)
+            .orFail(() => { throw new NotFoundException('Landmark not found.') })
+            .exec();
     }
 
+    /** Get by slug (with pretty url) is aimed towards Portal visitors */
     async getSingleBySlug(landmarkSlug: string): Promise<Landmark> {
         const landmarkFound = await this.landmarkModel
             .findOne({ slug: landmarkSlug })
-            .orFail(() => {throw new NotFoundException('Landmark not found.')});
+            .orFail(() => { throw new NotFoundException('Landmark not found.') })
+            .exec();
         if (landmarkFound.city.isActive && landmarkFound.isActive) {
             return landmarkFound;
         } else {
-            sendNotFound('Landmark not found.');
+            throw new NotFoundException('Landmark not found.')
         }        
     }
- 
+
+    /** Insert aimed exclusively towards CMS Admin users */
     async insert(data: LandmarkCreateUpdateDTO): Promise<Landmark> {
         const newLandmark = new this.landmarkModel(data);
         return await newLandmark.save();
     }
 
+    /** Update aimed exclusively towards CMS Admin users */
     async update(landmarkId: string, data: LandmarkCreateUpdateDTO): Promise<Landmark> {
-        try {
-            return await this.landmarkModel
-                .findOneAndUpdate({ _id: landmarkId }, data, { new: true })
-                .orFail()
-                .exec();
-        } catch (error) {
-            sendNotFound('Landmark not found.')
-        }
+        return await this.landmarkModel
+            .findOneAndUpdate({ _id: landmarkId }, data, { new: true })
+            .orFail(() => { throw new NotFoundException('Landmark not found.') })
+            .exec();
     }
 
+    //  TODO: TEMPORARY - Rethink all relations and deletion repercussions
+    /** Update aimed exclusively towards CMS Admin users */
     async delete(landmarkId: string): Promise<void> {
-        try {
-            await this.landmarkModel.deleteOne({ _id: landmarkId }).orFail().exec();
-        } catch (error) {
-            sendNotFound('Landmark not found.');
-        }
+        await this.landmarkModel
+            .deleteOne({ _id: landmarkId })
+            .orFail(() => { throw new NotFoundException('Landmark not found.') })
+            .exec();
     }
 
+    /** Custom transformation/validation middleware  */
     async validateBodyData(data: LandmarkCreateUpdateDTO): Promise<LandmarkCreateUpdateDTO> {
         const validatedData = data;
         const isUpdateOperation = data.hasOwnProperty('id');
