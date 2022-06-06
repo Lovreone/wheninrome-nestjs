@@ -48,4 +48,17 @@ export class ToursService {
             .orFail(() => { throw new NotFoundException('Tour not found.') })
             .exec();
     }
+
+    /** Custom data-transformation/validation middleware */
+    async validateBodyData(data: TourCreateUpdateDTO): Promise<TourCreateUpdateDTO> {
+        const validatedData = data;
+        const isUpdateOperation = validatedData.hasOwnProperty('id');
+    
+        if (!isUpdateOperation) { 
+            validatedData.createdAt = new Date();
+        } else {
+            validatedData.modifiedAt = new Date();
+        }
+        return validatedData;
+    }
 }
