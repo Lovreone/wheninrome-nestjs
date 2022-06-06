@@ -2,6 +2,7 @@ import { TourCreateUpdateDTO } from './tour-create-update.dto';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { TourConverter } from './tour.converter';
 
 import { Tour, TourDocument } from './tour.model';
 
@@ -29,7 +30,7 @@ export class ToursService {
 
     /** Insert aimed towards Portal Users */
     async insert(data: TourCreateUpdateDTO): Promise<Tour> {
-        const newTour = new this.tourModel(data);
+        const newTour = new this.tourModel(TourConverter.convertToModel(data));
         return await newTour.save();
     }
 

@@ -1,6 +1,5 @@
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsDate, IsMongoId } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Types } from 'mongoose';
 
 export class TourCreateUpdateDTO {
     @ApiProperty({description: 'Ad hoc Tour name set by User (i.e. \' Rome Tuesday walk\')', minimum: 3, maximum: 20})
@@ -25,10 +24,10 @@ export class TourCreateUpdateDTO {
     @IsString()
     tourNotes: string;
 
-    @ApiProperty({description: 'User which created the Tour (Mongo ObjectId)'})
+    @ApiProperty({description: 'ID of the User who created the Tour'})
     @IsNotEmpty({message: '\'$property\' field is required.'})
-    @IsMongoId()
-    userId: Types.ObjectId;
+    @IsString()
+    userId: string;
 
     createdAt: Date;
     modifiedAt: Date;

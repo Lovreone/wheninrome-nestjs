@@ -1,5 +1,7 @@
+import { TourCreateUpdateDTO } from './tour-create-update.dto';
 import { TourDTO } from './tour.dto';
 import { Tour } from './tour.model';
+import { Types } from 'mongoose';
 
 export class TourConverter {
     public static convertToDto(model: Tour): TourDTO {
@@ -9,9 +11,15 @@ export class TourConverter {
             model.tourDate || undefined,
             model.startingLocation || undefined,
             model.tourNotes || undefined,
-            model.userId || undefined,
+            model.userId.toHexString() || undefined,
             model.createdAt || undefined,
             model.modifiedAt || undefined
         );
+    }
+
+    public static convertToModel(dto: TourCreateUpdateDTO): Tour {
+        const userId = new Types.ObjectId(dto.userId)
+        const tour: Tour = { ...dto, userId }
+        return tour;
     }
 }

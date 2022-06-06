@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Types } from 'mongoose';
 
 export class TourDTO {
     @ApiProperty({description: 'Tour item ID (Unique)'})
@@ -17,8 +16,8 @@ export class TourDTO {
     @ApiProperty({description: 'Ad hoc Tour notes set by the user'})
     public tourNotes: string;
 
-    @ApiProperty({description: 'User which created the Tour (Mongo ObjectId)'})
-    public userId: Types.ObjectId;
+    @ApiProperty({description: 'ID of the User who created the Tour' })
+    public userId: string;
 
     @ApiProperty({description: 'Date of Tour item creation'})
     public createdAt: Date;
@@ -32,7 +31,7 @@ export class TourDTO {
         tourDate: Date, 
         startingLocation: string,
         tourNotes: string,
-        userId: Types.ObjectId,
+        userId: string,
         createdAt: Date,
         modifiedAt: Date,
     ) {
