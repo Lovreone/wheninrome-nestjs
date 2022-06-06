@@ -25,6 +25,9 @@ export class Tour {
     @Prop({ type: SchemaTypes.ObjectId, required: true })
     userId: Types.ObjectId;
 
+    @Prop({ type: String, required: false })
+    tourNotes: string;
+
     /* TODO: Some sort of slug? If we want to make tours public with their 'pretty' unique urls
         @Prop({ type: String, required: true, unique: true }) 
         slug: string;
