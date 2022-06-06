@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 
 export type TourDocument = Tour & Document;
 
@@ -21,9 +21,9 @@ export class Tour {
     
     /* TODO: Tour needs to have reference to parent User
         https://stackoverflow.com/questions/66395079/nestjs-and-mongoose-find-by-reference-object-id
-        @Prop({ type: SchemaTypes.ObjectId, required: true })
-        user: Types.ObjectId;
-    */
+    */  
+    @Prop({ type: SchemaTypes.ObjectId, required: true })
+    userId: Types.ObjectId;
 
     /* TODO: Some sort of slug? If we want to make tours public with their 'pretty' unique urls
         @Prop({ type: String, required: true, unique: true }) 
