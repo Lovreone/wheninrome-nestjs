@@ -69,7 +69,7 @@ export class AppController {
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
-    description: `Requires JWT in header. Returns basic user info and logged-in User roles. Response object structure:\n
+    description: `Requires a valid JWT in header. Returns basic user info and logged-in User roles. Response object structure:\n
       {
         "userId": string,
         "email": string,

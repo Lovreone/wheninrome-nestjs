@@ -13,7 +13,7 @@ import { LandmarkConverter } from './landmark.converter';
 @Controller('landmarks')
 export class LandmarksController {
     constructor(
-        private readonly landmarksService: LandmarksService
+        private landmarksService: LandmarksService
     ) {}
 
     @ApiTags('Landmarks (Admin)')
