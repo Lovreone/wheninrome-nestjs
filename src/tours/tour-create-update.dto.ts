@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsDate, IsMongoId } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsDateString } from 'class-validator';
 
 export class TourCreateUpdateDTO {
     @ApiProperty({description: 'Ad hoc Tour name set by User (i.e. \' Rome Tuesday walk\')', minimum: 3, maximum: 20})
@@ -11,7 +11,7 @@ export class TourCreateUpdateDTO {
 
     @ApiProperty({description: 'User selected date of the Tour'})
     @IsNotEmpty({message: '\'$property\' field is required.'})
-    @IsDate()
+    @IsDateString()
     tourDate: Date; 
     
     @ApiProperty({description: 'Tour starting location coordinates (i.e. 41.9061871712875, 12.475461122446518)'})
