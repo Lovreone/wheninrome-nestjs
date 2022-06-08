@@ -26,7 +26,11 @@ export class UserDTO {
     @ApiPropertyOptional({description: 'Date of latest User profile update'})
     public modifiedAt: Date;
 
-    @ApiProperty({description: 'Permissions level of the User', enum: ['admin', 'user']})
+    @ApiProperty({
+        description: 'Permission level of the User', 
+        type: 'array', 
+        items: { type: 'string', enum: ['ROLE_USER','PONTIFEX_MAXIMVS']}
+    })    
     public roles: Role[];
 
     constructor(

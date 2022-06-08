@@ -63,7 +63,7 @@ export class LandmarkCreateUpdateDTO {
     @IsString()
     coordinates: string;
 
-    @ApiPropertyOptional({description: 'Nested City object, containing necessary parent city data for quick access', type: LandmarkCityDTO})
+    @ApiPropertyOptional()
     @IsOptional()
     city: LandmarkCityDTO;
 

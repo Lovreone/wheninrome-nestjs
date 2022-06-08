@@ -38,7 +38,7 @@ export class LandmarkDTO {
     @ApiPropertyOptional({description: 'Coordinates pointing to the center of the landmark (i.e. 41.9061871712875, 12.475461122446518)'})
     public coordinates: string;
    
-    @ApiPropertyOptional({description: 'Nested City object, containing necessary parent city data for quick access', type: LandmarkCityDTO})
+    @ApiPropertyOptional()
     public city: LandmarkCityDTO;
 
     @ApiPropertyOptional({description: 'Flag determining whether Landmark is available to the Public or not'})
