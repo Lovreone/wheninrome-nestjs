@@ -10,7 +10,7 @@ import { UsersService } from './users/users.service';
 import { UserConverter } from './users/user.converter';
 import { UserDTO } from './users/user.dto';
 import { UserCreateDTO } from './users/user-create.dto';
-import { UserLoginDTO } from './users/user-login.dto';
+import { LoginBodyDTO, ProfileResponseDTO, LoginResponseDTO } from './auth/auth.dto';
 
 @Controller()
 export class AppController {
@@ -40,18 +40,12 @@ export class AppController {
 
   @ApiTags('Authentification')
   @ApiBody({
-    type: UserLoginDTO
+    type: LoginBodyDTO
   })
   @ApiResponse({
     status: 201,
-    description: `Returns JWT access token, Token expiry and logged-in User object. Response object structure:\n
-      { 
-        access_token: string,
-        tokenExpiresAt: NumericDate,
-        tokenIssuedAt: NumericDate,
-        user: UserDTO
-      }
-    `
+    description: 'Returns JWT access token, Token expiry and logged-in User object.',
+    type: LoginResponseDTO
   })
   @UseGuards(LocalAuthGuard) // The route handler will only be invoked if the user has been validated
   @Post('auth/login')
@@ -69,15 +63,8 @@ export class AppController {
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
-    description: `Requires a valid JWT in header. Returns basic user info and logged-in User roles. Response object structure:\n
-      {
-        "userId": string,
-        "email": string,
-        "roles": string[],
-        "firstName": string,
-        "lastName": string
-      }
-    `
+    description: 'Requires only a valid JWT in header. Returns basic user info and logged-in User roles.',
+    type: ProfileResponseDTO
   })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
