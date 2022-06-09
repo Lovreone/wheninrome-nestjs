@@ -12,6 +12,7 @@ export class TourConverter {
             model.startingLocation || undefined,
             model.tourNotes || undefined,
             model.userId.toHexString() || undefined,
+            model.cityId.toHexString() || undefined,
             model.createdAt || undefined,
             model.modifiedAt || undefined
         );

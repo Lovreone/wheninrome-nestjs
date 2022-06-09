@@ -35,6 +35,7 @@ export class TourDTO {
         startingLocation: string,
         tourNotes: string,
         userId: string,
+        cityId: string,
         createdAt: Date,
         modifiedAt: Date,
     ) {
@@ -44,6 +45,7 @@ export class TourDTO {
         this.startingLocation = startingLocation;
         this.tourNotes = tourNotes;
         this.userId = userId;
+        this.cityId = cityId;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
