@@ -19,7 +19,8 @@ export class TourConverter {
 
     public static convertToModel(dto: TourCreateUpdateDTO): Tour {
         const userId = new Types.ObjectId(dto.userId)
-        const tour: Tour = { ...dto, userId }
+        const cityId = new Types.ObjectId(dto.cityId)
+        const tour: Tour = { ...dto, userId, cityId }
         return tour;
     }
 }

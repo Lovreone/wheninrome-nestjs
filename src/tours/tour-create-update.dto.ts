@@ -29,6 +29,11 @@ export class TourCreateUpdateDTO {
     @IsString()
     userId: string;
 
+    @ApiProperty({description: 'ID of the City selected for the Tour'})
+    @IsNotEmpty({message: '\'$property\' field is required.'})
+    @IsString()
+    cityId: string;
+
     createdAt: Date;
     modifiedAt: Date;
 }

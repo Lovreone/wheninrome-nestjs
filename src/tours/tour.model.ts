@@ -43,6 +43,8 @@ export class Tour {
         - Upside: All required data will be fetched with one call
         - Downside: We will also have to update all tours on City Update like we already do with Landmarks
     */
+    @Prop({ type: SchemaTypes.ObjectId, required: true })
+    cityId: Types.ObjectId;
     
     /* TODO: User picks N landmarks from selected city (from available)
         landmarkIds: Array<ObjectId>;

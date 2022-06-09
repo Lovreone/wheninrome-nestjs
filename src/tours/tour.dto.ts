@@ -16,8 +16,11 @@ export class TourDTO {
     @ApiProperty({description: 'Ad hoc Tour notes set by the user'})
     public tourNotes: string;
 
-    @ApiProperty({description: 'ID of the User who created the Tour' })
+    @ApiProperty({description: 'ID of the User who created the Tour'})
     public userId: string;
+
+    @ApiProperty({description: 'ID of the City selected for the Tour'})
+    public cityId: string;
 
     @ApiProperty({description: 'Date of Tour item creation'})
     public createdAt: Date;
