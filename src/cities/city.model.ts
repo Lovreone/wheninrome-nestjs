@@ -13,7 +13,7 @@ export class City {
     @Prop({ type: String, required: true, unique: true })
     slug: string;
 
-    @Prop({ type: String, required: false })
+    @Prop({ type: String, required: true })
     country: string;
 
     @Prop({ type: String, required: false })

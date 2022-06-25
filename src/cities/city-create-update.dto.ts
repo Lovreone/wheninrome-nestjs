@@ -15,8 +15,8 @@ export class CityCreateUpdateDTO {
     @MinLength(3)
     slug: string;
 
-    @ApiPropertyOptional({description: 'Parent Country of the City', minimum: 3})
-    @IsOptional()
+    @ApiProperty({description: 'Parent Country of the City', minimum: 3})
+    @IsNotEmpty({message: '\'$property\' field is required.'})
     @IsString()
     @MinLength(3)
     country: string;

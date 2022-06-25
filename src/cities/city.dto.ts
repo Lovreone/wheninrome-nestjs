@@ -10,7 +10,7 @@ export class CityDTO {
     @ApiProperty({description: 'City \'pretty-url\' slug (Unique)'})
     public slug: string;
 
-    @ApiPropertyOptional({description: 'Parent Country of the City'})
+    @ApiProperty({description: 'Parent Country of the City'})
     public country: string;
 
     @ApiPropertyOptional({description: 'Featured image of the City'})
